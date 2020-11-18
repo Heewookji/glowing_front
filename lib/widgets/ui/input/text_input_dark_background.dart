@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 enum InputKind {
   Email,
   Password,
+  Nickname,
 }
 
 class TextInputDarkBackground extends StatelessWidget {
@@ -21,6 +22,10 @@ class TextInputDarkBackground extends StatelessWidget {
   final double bottomPadding;
   final IconData icon;
   final InputKind inputKind;
+
+  double get height {
+    return 0;
+  }
 
   @override
   Widget build(BuildContext context) {
