@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AccentColorBuilder {
   static const int R = 252, G = 163, B = 17;
-  static const double OPACITY = 100;
+  static const double OPACITY = 1;
   static const int HEX = 0xFFFCA311;
 
   static const Map<int, Color> _colorCodes = {

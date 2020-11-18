@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class GroupOverviewScreen extends StatelessWidget {
+  static const routeName = '/groups';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         child: Center(
-          child: Text('Init!'),
+          child: Text('group list'),
         ),
       ),
     );

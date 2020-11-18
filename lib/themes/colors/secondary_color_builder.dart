@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class PrimaryColorBuilder {
-  static const int R = 20, G = 33, B = 61;
+class SecondaryColorBuilder {
+  static const int R = 229, G = 229, B = 229;
   static const double OPACITY = 1;
-  static const int HEX = 0xFF14213D;
+  static const int HEX = 0xFFE5E5E5;
 
   static const Map<int, Color> _colorCodes = {
     50: Color.fromRGBO(R, G, B, .1),
