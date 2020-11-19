@@ -1,30 +1,29 @@
 import 'package:flutter/material.dart';
 
-class RaisedButtonAccent extends StatelessWidget {
-  const RaisedButtonAccent({
-    @required this.text,
+class ElevatedButtonAccent extends StatelessWidget {
+  const ElevatedButtonAccent({
+    @required this.child,
     @required this.onPressed,
+    @required this.height,
     this.margin,
   });
 
-  final String text;
+  final Widget child;
   final Function onPressed;
   final EdgeInsets margin;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
+      height: height,
       margin: margin,
       child: ElevatedButton(
-        child: Text(
-          text,
-          style: TextStyle(color: theme.primaryColor),
-        ),
+        child: child,
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           primary: theme.accentColor,
-          padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),

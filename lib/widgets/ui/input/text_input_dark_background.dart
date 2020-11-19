@@ -13,8 +13,10 @@ class TextInputDarkBackground extends StatelessWidget {
     @required this.lineColor,
     @required this.margin,
     @required this.inputKind,
-    @required this.controller,
+    @required this.dependentController,
     @required this.controllers,
+    @required this.formData,
+    @required this.onValidation,
     this.height,
   });
 
@@ -22,9 +24,11 @@ class TextInputDarkBackground extends StatelessWidget {
   final Color lineColor;
   final EdgeInsets margin;
   final InputKind inputKind;
-  final TextEditingController controller;
+  final TextEditingController dependentController;
   final Map<String, TextEditingController> controllers;
   final double height;
+  final Map<String, String> formData;
+  final bool onValidation;
 
   @override
   Widget build(BuildContext context) {
@@ -32,17 +36,20 @@ class TextInputDarkBackground extends StatelessWidget {
     IconData icon;
     TextInputType keyboardType;
     Function validator;
+    Function onSaver;
     switch (this.inputKind) {
       case InputKind.Email:
         labelText = '이메일';
         icon = Icons.mail_outline_outlined;
         keyboardType = TextInputType.emailAddress;
         validator = _emailValidator;
+        onSaver = _emailSaver;
         break;
       case InputKind.Password:
         labelText = '비밀번호';
         icon = Icons.lock_outline;
         validator = _passwordValidator;
+        onSaver = _passwordSaver;
         break;
       case InputKind.PasswordConfirm:
         labelText = '비밀번호 확인';
@@ -54,6 +61,7 @@ class TextInputDarkBackground extends StatelessWidget {
         icon = Icons.person_outline;
         keyboardType = TextInputType.text;
         validator = _nicknameValidator;
+        onSaver = _nicknameSaver;
         break;
       default:
         labelText = '';
@@ -65,11 +73,10 @@ class TextInputDarkBackground extends StatelessWidget {
       child: TextFormField(
         style: TextStyle(color: textColor),
         keyboardType: keyboardType,
-        controller: controller,
+        controller: dependentController,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: TextStyle(color: textColor),
-          errorStyle: TextStyle(color: textColor),
+          labelStyle: TextStyle(color: lineColor),
           prefixIcon: Icon(
             icon,
             color: lineColor,
@@ -95,12 +102,14 @@ class TextInputDarkBackground extends StatelessWidget {
             ),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 30),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
         ),
         obscureText: this.inputKind == InputKind.Password ||
                 this.inputKind == InputKind.PasswordConfirm
             ? true
             : false,
-        validator: validator,
+        validator: onValidation ? validator : null,
+        onSaved: onSaver,
       ),
     );
   }
@@ -110,9 +119,17 @@ class TextInputDarkBackground extends StatelessWidget {
     return null;
   }
 
+  void _emailSaver(String value) {
+    formData['email'] = value;
+  }
+
   String _passwordValidator(String value) {
     if (value.isEmpty || value.length < 8) return '패스워드는 8글자 이상입니다';
     return null;
+  }
+
+  void _passwordSaver(String value) {
+    formData['password'] = value;
   }
 
   String _passwordConfirmValidator(String value) {
@@ -126,5 +143,9 @@ class TextInputDarkBackground extends StatelessWidget {
     if (value.isEmpty || !(3 <= value.length && value.length < 9))
       return '닉네임은 3글자에서 8글자 사이입니다';
     return null;
+  }
+
+  void _nicknameSaver(String value) {
+    formData['nickname'] = value;
   }
 }

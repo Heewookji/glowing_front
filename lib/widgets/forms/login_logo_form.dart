@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:glowing_front/widgets/ui/button/raised_button_accent.dart';
+import 'package:glowing_front/widgets/ui/button/elevated_button_accent.dart';
 import 'package:glowing_front/widgets/ui/input/text_input_dark_background.dart';
+import 'package:provider/provider.dart';
+import '../../providers/auth.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({
@@ -13,8 +15,14 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
+  Map<String, String> _formData = {
+    'email': '',
+    'password': '',
+    'nickname': '',
+  };
   bool _isSignup = false;
-  bool _isSubmitted = false;
+  bool _onceSubmitted = false;
+  bool _isLoading = false;
 
   AnimationController _controller;
   Animation<Offset> _slideAnimation;
@@ -61,17 +69,32 @@ class _LoginFormState extends State<LoginForm>
       _controller.reverse();
     setState(() {
       _isSignup = !_isSignup;
-      _isSubmitted = false;
+      _onceSubmitted = false;
     });
     _formKey.currentState.reset();
+    _textControllers.forEach((key, value) => value.clear());
     FocusScope.of(context).unfocus();
   }
 
-  void _submit() {
-    _formKey.currentState.validate();
-    setState(() {
-      _isSubmitted = true;
-    });
+  Future<void> _submit() async {
+    setState(() => _onceSubmitted = true);
+    if (!_formKey.currentState.validate()) return;
+    _formKey.currentState.save();
+    setState(() => _isLoading = true);
+
+    if (_isSignup) {
+      await Provider.of<Auth>(context, listen: false).signup(
+        _formData['email'],
+        _formData['password'],
+        _formData['nickname'],
+      );
+    } else {
+      await Provider.of<Auth>(context, listen: false).login(
+        _formData['email'],
+        _formData['password'],
+      );
+    }
+    setState(() => _isLoading = false);
   }
 
   @override
@@ -88,7 +111,7 @@ class _LoginFormState extends State<LoginForm>
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
           child: Form(
             key: _formKey,
-            autovalidateMode: _isSubmitted
+            autovalidateMode: _onceSubmitted
                 ? AutovalidateMode.onUserInteraction
                 : AutovalidateMode.disabled,
             child: Container(
@@ -112,6 +135,7 @@ class _LoginFormState extends State<LoginForm>
                         child: _buildTextInputDarkBackground(
                           theme,
                           InputKind.Nickname,
+                          onValidation: _isSignup ? true : false,
                         ),
                       ),
                     ),
@@ -127,7 +151,8 @@ class _LoginFormState extends State<LoginForm>
                         child: _buildTextInputDarkBackground(
                           theme,
                           InputKind.Password,
-                          controller: _textControllers['password'],
+                          dependentController: _textControllers['password'],
+                          onValidation: _isSignup ? true : false,
                         ),
                       ),
                     ),
@@ -137,10 +162,28 @@ class _LoginFormState extends State<LoginForm>
                     _isSignup ? InputKind.PasswordConfirm : InputKind.Password,
                     height: textInputHeight,
                   ),
-                  RaisedButtonAccent(
-                    text: _isSignup ? '회원가입' : '로그인',
+                  ElevatedButtonAccent(
+                    child: _isLoading
+                        ? SizedBox(
+                            height: screenHeight * 0.02,
+                            child: CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(theme.primaryColor),
+                                  strokeWidth: 2.5,
+                            ),
+                          )
+                        : _isSignup
+                            ? Text(
+                                '회원가입',
+                                style: TextStyle(color: theme.primaryColor),
+                              )
+                            : Text(
+                                '로그인',
+                                style: TextStyle(color: theme.primaryColor),
+                              ),
                     onPressed: _submit,
                     margin: const EdgeInsets.only(top: 20),
+                    height: screenHeight * 0.06,
                   ),
                 ],
               ),
@@ -165,15 +208,19 @@ class _LoginFormState extends State<LoginForm>
 
   TextInputDarkBackground _buildTextInputDarkBackground(
       ThemeData theme, InputKind kind,
-      {TextEditingController controller, double height}) {
+      {TextEditingController dependentController,
+      double height,
+      bool onValidation = true}) {
     return TextInputDarkBackground(
       textColor: Colors.white,
       lineColor: theme.backgroundColor,
       margin: EdgeInsets.only(bottom: 20),
       inputKind: kind,
-      controller: controller,
+      dependentController: dependentController,
       controllers: _textControllers,
+      formData: _formData,
       height: height,
+      onValidation: onValidation,
     );
   }
 
