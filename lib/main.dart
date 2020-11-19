@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/auth.dart';
@@ -6,7 +7,14 @@ import 'screens/auth/login_screen.dart';
 import 'screens/study/group_overview_screen.dart';
 import 'themes/root_theme_builder.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
