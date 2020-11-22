@@ -124,7 +124,7 @@ class TextInputDarkBackground extends StatelessWidget {
   }
 
   String _passwordValidator(String value) {
-    if (value.isEmpty || value.length < 8) return '패스워드는 8글자 이상입니다';
+    if (value.isEmpty || value.length < 6) return '패스워드는 6글자 이상입니다';
     return null;
   }
 

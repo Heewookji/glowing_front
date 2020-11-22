@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-
-import 'providers/auth.dart';
-import 'screens/auth/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'screens/auth/auth_screen.dart';
 import 'screens/study/group_overview_screen.dart';
 import 'themes/root_theme_builder.dart';
 
@@ -16,26 +15,62 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _initialized = false;
+  bool _error = false;
+
+  void initializeFlutterFire() async {
+    try {
+      await Firebase.initializeApp();
+      setState(() {
+        _initialized = true;
+      });
+    } catch (e, trace) {
+      print(trace);
+      setState(() {
+        _error = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    initializeFlutterFire();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => Auth(),
-        ),
-      ],
-      child: Consumer<Auth>(
-        builder: (ctx, auth, _) => MaterialApp(
-          title: 'Glowing',
-          debugShowCheckedModeBanner: false,
-          theme: RootThemeBuilder.build(),
-          home: auth.isAuth ? GroupOverviewScreen() : LoginScreen(),
-          routes: {
-            GroupOverviewScreen.routeName: (ctx) => GroupOverviewScreen(),
+    if (_error)
+      return null;
+    else if (!_initialized)
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    else
+      return MaterialApp(
+        title: 'Glowing',
+        debugShowCheckedModeBanner: false,
+        theme: RootThemeBuilder.build(),
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (ctx, userSnapshot) {
+            if (userSnapshot.connectionState == ConnectionState.waiting)
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            if (userSnapshot.hasData) return GroupOverviewScreen();
+            return AuthScreen();
           },
         ),
-      ),
-    );
+        routes: {
+          GroupOverviewScreen.routeName: (ctx) => GroupOverviewScreen(),
+        },
+      );
   }
 }

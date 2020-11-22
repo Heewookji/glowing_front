@@ -1,4 +1,4 @@
-package com.example.glowing_front
+package com.heesang.glowingFront
 
 import io.flutter.embedding.android.FlutterActivity
 

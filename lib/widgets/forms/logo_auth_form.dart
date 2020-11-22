@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:glowing_front/widgets/ui/button/elevated_button_accent.dart';
 import 'package:glowing_front/widgets/ui/input/text_input_dark_background.dart';
-import 'package:provider/provider.dart';
-import '../../providers/auth.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({
-    Key key,
-  }) : super(key: key);
+class LogoAuthForm extends StatefulWidget {
+  LogoAuthForm(
+    this.submitFn,
+    this.isLoading,
+  );
+
+  final void Function(
+    String email,
+    String password,
+    String nickname,
+    bool isSignup,
+  ) submitFn;
+  final bool isLoading;
+
   @override
-  _LoginFormState createState() => _LoginFormState();
+  _LogoAuthFormState createState() => _LogoAuthFormState();
 }
 
-class _LoginFormState extends State<LoginForm>
+class _LogoAuthFormState extends State<LogoAuthForm>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   Map<String, String> _formData = {
@@ -22,7 +30,6 @@ class _LoginFormState extends State<LoginForm>
   };
   bool _isSignup = false;
   bool _onceSubmitted = false;
-  bool _isLoading = false;
 
   AnimationController _controller;
   Animation<Offset> _slideAnimation;
@@ -76,25 +83,17 @@ class _LoginFormState extends State<LoginForm>
     FocusScope.of(context).unfocus();
   }
 
-  Future<void> _submit() async {
+  void _submit() {
     setState(() => _onceSubmitted = true);
     if (!_formKey.currentState.validate()) return;
     _formKey.currentState.save();
-    setState(() => _isLoading = true);
 
-    if (_isSignup) {
-      await Provider.of<Auth>(context, listen: false).signup(
-        _formData['email'],
-        _formData['password'],
-        _formData['nickname'],
-      );
-    } else {
-      await Provider.of<Auth>(context, listen: false).login(
-        _formData['email'],
-        _formData['password'],
-      );
-    }
-    setState(() => _isLoading = false);
+    widget.submitFn(
+      _formData['email'],
+      _formData['password'],
+      _formData['nickname'],
+      _isSignup,
+    );
   }
 
   @override
@@ -163,13 +162,13 @@ class _LoginFormState extends State<LoginForm>
                     height: textInputHeight,
                   ),
                   ElevatedButtonAccent(
-                    child: _isLoading
+                    child: widget.isLoading
                         ? SizedBox(
                             height: screenHeight * 0.02,
                             child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(theme.primaryColor),
-                                  strokeWidth: 2.5,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  theme.primaryColor),
+                              strokeWidth: 2.5,
                             ),
                           )
                         : _isSignup
