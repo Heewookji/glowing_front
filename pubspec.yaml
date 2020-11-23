@@ -42,7 +42,7 @@ dependencies:
   firebase_remote_config: ^0.4.2
   # firebase auth
   firebase_auth: ^0.18.3
-  # firebase db
+  # firebase storage
   firebase_storage: ^5.0.1
   # analytics
   firebase_analytics: ^6.2.0

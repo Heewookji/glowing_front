@@ -268,4 +268,8 @@ Temporary Items
 .history
 .ionide
 
+### firebase ios, android 설정 파일
+**/GoogleService-Info.plist
+**/google-services.json
+
 # End of https://www.toptal.com/developers/gitignore/api/dart,macos,flutter,visualstudiocode,intellij
