@@ -180,7 +180,7 @@ class _LogoAuthFormState extends State<LogoAuthForm>
                                 '로그인',
                                 style: TextStyle(color: theme.primaryColor),
                               ),
-                    onPressed: _submit,
+                    onPressed: widget.isLoading ? () {} : _submit,
                     margin: const EdgeInsets.only(top: 20),
                     height: screenHeight * 0.06,
                   ),

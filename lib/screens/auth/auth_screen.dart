@@ -12,7 +12,7 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   bool _isLoading = false;
 
-  void _submitAuthForm(
+  Future<void> _submitAuthForm(
     String email,
     String password,
     String nickname,
@@ -26,11 +26,12 @@ class _AuthScreenState extends State<AuthScreen> {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
       } on FirebaseAuthException catch (e) {
-        if (e.code == 'weak-password') {
+        if (e.code == 'weak-password')
           print('The password provided is too weak.');
-        } else if (e.code == 'email-already-in-use') {
+        else if (e.code == 'email-already-in-use')
           print('The account already exists for that email.');
-        }
+        else
+          print(e);
       } catch (e) {
         print(e);
       }
@@ -39,13 +40,19 @@ class _AuthScreenState extends State<AuthScreen> {
         UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
       } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
+        if (e.code == 'user-not-found')
           print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
+        else if (e.code == 'wrong-password')
           print('Wrong password provided for that user.');
-        }
+        else
+          print(e);
+      } catch (e) {
+        print(e);
       }
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -54,13 +61,15 @@ class _AuthScreenState extends State<AuthScreen> {
     final MediaQueryData media = MediaQuery.of(context);
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
+        body: Stack(
+      children: [
+        Container(
           decoration: _backgroundDecorationBuild(theme),
-          alignment: Alignment.center,
-          height: media.size.height,
+        ),
+        SingleChildScrollView(
           child: Container(
             alignment: Alignment.center,
+            height: media.size.height,
             child: Stack(
               children: [
                 Lottie.asset('assets/animations/ani.json', fit: BoxFit.cover),
@@ -69,8 +78,8 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
           ),
         ),
-      ),
-    );
+      ],
+    ));
   }
 
   BoxDecoration _backgroundDecorationBuild(ThemeData theme) {
@@ -82,6 +91,7 @@ class _AuthScreenState extends State<AuthScreen> {
           theme.primaryColor,
           Colors.black,
         ],
+        stops: [0, 1],
       ),
     );
   }
