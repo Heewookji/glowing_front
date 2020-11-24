@@ -13,6 +13,7 @@ class LogoAuthForm extends StatefulWidget {
     String password,
     String nickname,
     bool isSignup,
+    BuildContext ctx,
   ) submitFn;
   final bool isLoading;
 
@@ -93,6 +94,7 @@ class _LogoAuthFormState extends State<LogoAuthForm>
       _formData['password'],
       _formData['nickname'],
       _isSignup,
+      context,
     );
   }
 

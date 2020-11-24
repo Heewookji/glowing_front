@@ -17,42 +17,35 @@ class _AuthScreenState extends State<AuthScreen> {
     String password,
     String nickname,
     bool isSignup,
+    BuildContext ctx,
   ) async {
-    setState(() {
-      _isLoading = true;
-    });
-    if (isSignup) {
-      try {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      if (isSignup) {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'weak-password')
-          print('The password provided is too weak.');
-        else if (e.code == 'email-already-in-use')
-          print('The account already exists for that email.');
-        else
-          print(e);
-      } catch (e) {
-        print(e);
-      }
-    } else {
-      try {
+      } else {
         UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found')
-          print('No user found for that email.');
-        else if (e.code == 'wrong-password')
-          print('Wrong password provided for that user.');
-        else
-          print(e);
-      } catch (e) {
-        print(e);
       }
+    } on FirebaseAuthException catch (e) {
+      Scaffold.of(ctx).showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: Theme.of(ctx).errorColor,
+        ),
+      );
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      print(e);
+      setState(() {
+        _isLoading = false;
+      });
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   @override
