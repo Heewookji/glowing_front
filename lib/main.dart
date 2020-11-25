@@ -62,12 +62,16 @@ class _MyAppState extends State<MyApp> {
         home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (ctx, userSnapshot) {
-            if (userSnapshot.connectionState == ConnectionState.waiting)
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            if (userSnapshot.hasData) return ChatScreen();
-            return AuthScreen();
+            return AnimatedSwitcher(
+              duration: Duration(seconds: 1),
+              child: userSnapshot.connectionState == ConnectionState.waiting
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : userSnapshot.hasData
+                      ? ChatScreen()
+                      : AuthScreen(),
+            );
           },
         ),
         routes: {

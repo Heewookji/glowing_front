@@ -63,25 +63,26 @@ class _AuthScreenState extends State<AuthScreen> {
     final MediaQueryData media = MediaQuery.of(context);
 
     return Scaffold(
-        body: Stack(
-      children: [
-        Container(
-          decoration: _backgroundDecorationBuild(theme),
-        ),
-        SingleChildScrollView(
-          child: Container(
-            alignment: Alignment.center,
-            height: media.size.height,
-            child: Stack(
-              children: [
-                Lottie.asset('assets/animations/ani.json', fit: BoxFit.cover),
-                LogoAuthForm(_submitAuthForm, _isLoading),
-              ],
+      body: Stack(
+        children: [
+          Container(
+            decoration: _backgroundDecorationBuild(theme),
+          ),
+          SingleChildScrollView(
+            child: Container(
+              alignment: Alignment.center,
+              height: media.size.height,
+              child: Stack(
+                children: [
+                  Lottie.asset('assets/animations/ani.json', fit: BoxFit.cover),
+                  LogoAuthForm(_submitAuthForm, _isLoading),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 
   BoxDecoration _backgroundDecorationBuild(ThemeData theme) {
