@@ -28,17 +28,17 @@ class _AuthScreenState extends State<AuthScreen> {
       if (isSignup) {
         authResult = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(authResult.user.uid)
+            .set({
+          'userName': nickname,
+          'email': email,
+        });
       } else {
         authResult = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
       }
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(authResult.user.uid)
-          .set({
-        'userName': nickname,
-        'email': email,
-      });
     } on FirebaseAuthException catch (e) {
       Scaffold.of(ctx).showSnackBar(
         SnackBar(
