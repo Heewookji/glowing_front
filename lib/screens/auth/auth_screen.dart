@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../widgets/forms/logo_auth_form.dart';
+import '../../widgets/auth/logo_auth_form.dart';
 
 class AuthScreen extends StatefulWidget {
   @override
@@ -19,17 +20,25 @@ class _AuthScreenState extends State<AuthScreen> {
     bool isSignup,
     BuildContext ctx,
   ) async {
+    UserCredential authResult;
     try {
       setState(() {
         _isLoading = true;
       });
       if (isSignup) {
-        UserCredential userCredential = await FirebaseAuth.instance
+        authResult = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
       } else {
-        UserCredential userCredential = await FirebaseAuth.instance
+        authResult = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
       }
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(authResult.user.uid)
+          .set({
+        'userName': nickname,
+        'email': email,
+      });
     } on FirebaseAuthException catch (e) {
       Scaffold.of(ctx).showSnackBar(
         SnackBar(

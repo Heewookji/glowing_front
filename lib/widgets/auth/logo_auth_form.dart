@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:glowing_front/widgets/ui/button/elevated_button_accent.dart';
-import 'package:glowing_front/widgets/ui/input/text_input_dark_background.dart';
+
+import '../common/button/elevated_button_accent.dart';
+import '../common/input/text_input_dark_background.dart';
 
 class LogoAuthForm extends StatefulWidget {
   LogoAuthForm(

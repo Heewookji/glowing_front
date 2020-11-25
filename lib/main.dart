@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'screens/auth/auth_screen.dart';
-import 'screens/study/group_overview_screen.dart';
+import 'screens/chat/chat_screen.dart';
+import 'screens/group/group_overview_screen.dart';
 import 'themes/root_theme_builder.dart';
 
 void main() {
@@ -64,7 +66,7 @@ class _MyAppState extends State<MyApp> {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            if (userSnapshot.hasData) return GroupOverviewScreen();
+            if (userSnapshot.hasData) return ChatScreen();
             return AuthScreen();
           },
         ),
