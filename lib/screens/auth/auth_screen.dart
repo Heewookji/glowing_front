@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:glowing_front/providers/firebase_auth_provider.dart';
 import 'package:lottie/lottie.dart';
-
+import 'package:provider/provider.dart';
 import '../../widgets/auth/logo_auth_form.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -20,37 +19,22 @@ class _AuthScreenState extends State<AuthScreen> {
     bool isSignup,
     BuildContext ctx,
   ) async {
-    UserCredential authResult;
     try {
       setState(() {
         _isLoading = true;
       });
-      if (isSignup) {
-        authResult = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email, password: password);
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(authResult.user.uid)
-            .set({
-          'userName': nickname,
-          'email': email,
-        });
-      } else {
-        authResult = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
-      }
-    } on FirebaseAuthException catch (e) {
+      if (isSignup)
+        await Provider.of<FirebaseAuthProvider>(context, listen: false)
+            .signup(email, password, nickname);
+      else
+        await Provider.of<FirebaseAuthProvider>(context, listen: false).login(email, password);
+    } catch (e) {
       Scaffold.of(ctx).showSnackBar(
         SnackBar(
           content: Text(e.message),
           backgroundColor: Theme.of(ctx).errorColor,
         ),
       );
-      setState(() {
-        _isLoading = false;
-      });
-    } catch (e) {
-      print(e);
       setState(() {
         _isLoading = false;
       });

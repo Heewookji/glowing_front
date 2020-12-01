@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:glowing_front/providers/firebase_auth_provider.dart';
+import 'package:provider/provider.dart';
 
 class NewMessage extends StatefulWidget {
   @override
@@ -18,7 +19,7 @@ class _NewMessageState extends State<NewMessage> {
       _enteredMessage = '';
     });
     _controller.clear();
-    final user = FirebaseAuth.instance.currentUser;
+    final user = Provider.of<FirebaseAuthProvider>(context, listen: false).user;
     final userData = await FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
@@ -42,7 +43,9 @@ class _NewMessageState extends State<NewMessage> {
             Expanded(
               child: TextField(
                 controller: _controller,
-                decoration: InputDecoration(contentPadding: EdgeInsets.only(left:15),labelText: '메시지 보내기'),
+                decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 15),
+                    labelText: '메시지 보내기'),
                 onChanged: (value) {
                   setState(() {
                     _enteredMessage = value;

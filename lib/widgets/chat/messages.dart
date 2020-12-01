@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:glowing_front/providers/firebase_auth_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../chat/message_bubble.dart';
 
 class Messages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentUser = FirebaseAuth.instance.currentUser;
+    final currentUser = Provider.of<FirebaseAuthProvider>(context, listen: false).user;
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('chats')

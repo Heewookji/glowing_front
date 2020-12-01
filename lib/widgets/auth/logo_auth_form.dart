@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glowing_front/widgets/common/indicator/space_indicator.dart';
 
 import '../common/button/elevated_button_accent.dart';
 import '../common/input/text_input_dark_background.dart';
@@ -166,13 +167,9 @@ class _LogoAuthFormState extends State<LogoAuthForm>
                   ),
                   ElevatedButtonAccent(
                     child: widget.isLoading
-                        ? SizedBox(
-                            height: screenHeight * 0.02,
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  theme.primaryColor),
-                              strokeWidth: 2.5,
-                            ),
+                        ? SpaceIndicator(
+                            height: screenHeight * 0.06,
+                            color: theme.primaryColor,
                           )
                         : _isSignup
                             ? Text(
