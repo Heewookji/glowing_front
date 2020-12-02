@@ -1,9 +1,20 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:glowing_front/providers/firebase_auth_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:glowing_front/core/models/message_model.dart';
+import 'package:glowing_front/core/viewmodels/message_crud_model.dart';
 import 'package:provider/provider.dart';
 
 class NewMessage extends StatefulWidget {
+  final String myId;
+  final String myImageUrl;
+  final String myNickName;
+
+  const NewMessage({
+    @required this.myId,
+    @required this.myNickName,
+    @required this.myImageUrl,
+  });
+
   @override
   _NewMessageState createState() => _NewMessageState();
 }
@@ -12,24 +23,22 @@ class _NewMessageState extends State<NewMessage> {
   final _controller = TextEditingController();
   var _enteredMessage = '';
 
-  void _sendMessage() async {
+  void _sendMessage() {
     if (_enteredMessage.trim().isEmpty) return;
     String message = _enteredMessage;
     setState(() {
       _enteredMessage = '';
     });
     _controller.clear();
-    final user = Provider.of<FirebaseAuthProvider>(context, listen: false).user;
-    final userData = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get();
-    FirebaseFirestore.instance.collection('chats').add({
-      'text': message,
-      'createdAt': Timestamp.now(),
-      'userId': user.uid,
-      'userName': userData['userName'],
-    });
+    Provider.of<MessageCRUDModel>(context, listen: false).addMessage(
+      MessageModel(
+        userId: widget.myId,
+        userNickName: widget.myNickName,
+        userImageUrl: widget.myImageUrl,
+        text: message,
+        createdAt: Timestamp.now(),
+      ),
+    );
   }
 
   @override

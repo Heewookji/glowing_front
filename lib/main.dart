@@ -1,20 +1,26 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glowing_front/providers/firebase_auth_provider.dart';
 import 'package:provider/provider.dart';
-import 'screens/auth/auth_screen.dart';
-import 'screens/chat/chat_screen.dart';
-import 'screens/group/group_overview_screen.dart';
-import 'themes/root_theme_builder.dart';
+
+import 'core/providers/auth.dart';
+import 'core/viewmodels/message_crud_model.dart';
+import 'core/viewmodels/user_crud_model.dart';
+import 'locator.dart';
+import 'ui/router.dart' as router;
+import 'ui/screens/auth/auth_screen.dart';
+import 'ui/screens/message/message_screen.dart';
+import 'ui/themes/root_theme_builder.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  //가로모드 금지
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  setupLocator();
   runApp(MyApp());
 }
 
@@ -24,10 +30,16 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => FirebaseAuthProvider(),
+          create: (ctx) => Auth(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => locator<MessageCRUDModel>(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => locator<UserCRUDModel>(),
         ),
       ],
-      child: Consumer<FirebaseAuthProvider>(
+      child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
           title: 'Glowing',
           debugShowCheckedModeBanner: false,
@@ -40,13 +52,11 @@ class MyApp extends StatelessWidget {
                       child: CircularProgressIndicator(),
                     )
                   : userSnapshot.hasData
-                      ? ChatScreen()
+                      ? MessageScreen()
                       : AuthScreen();
             },
           ),
-          routes: {
-            GroupOverviewScreen.routeName: (ctx) => GroupOverviewScreen(),
-          },
+          onGenerateRoute: router.Router.generateRoute,
         ),
       ),
     );
