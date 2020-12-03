@@ -13,7 +13,7 @@ class LogoAuthForm extends StatefulWidget {
   final void Function(
     String email,
     String password,
-    String nickname,
+    String nickName,
     bool isSignup,
     BuildContext ctx,
   ) submitFn;
@@ -29,7 +29,7 @@ class _LogoAuthFormState extends State<LogoAuthForm>
   Map<String, String> _formData = {
     'email': '',
     'password': '',
-    'nickname': '',
+    'nickName': '',
   };
   bool _isSignup = false;
   bool _onceSubmitted = false;
@@ -94,7 +94,7 @@ class _LogoAuthFormState extends State<LogoAuthForm>
     widget.submitFn(
       _formData['email'],
       _formData['password'],
-      _formData['nickname'],
+      _formData['nickName'],
       _isSignup,
       context,
     );
@@ -137,7 +137,7 @@ class _LogoAuthFormState extends State<LogoAuthForm>
                         position: _slideAnimation,
                         child: _buildTextInputDarkBackground(
                           theme,
-                          InputKind.Nickname,
+                          InputKind.NickName,
                           onValidation: _isSignup ? true : false,
                         ),
                       ),

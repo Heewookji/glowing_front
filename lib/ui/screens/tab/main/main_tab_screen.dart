@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:glowing_front/ui/screens/message/message_list_screen.dart';
+import 'package:glowing_front/ui/screens/message/message_room_list_screen.dart';
 import 'package:glowing_front/ui/screens/tab/main/feed_screen.dart';
 import 'package:glowing_front/ui/screens/tab/main/my_group_screen.dart';
 import 'package:glowing_front/ui/screens/tab/main/my_info_screen.dart';
@@ -18,12 +18,7 @@ class _MainTabScreenState extends State<MainTabScreen> {
   @override
   void initState() {
     super.initState();
-    _pages = [
-      FeedScreen(),
-      SearchScreen(),
-      MyGroupScreen(),
-      MyInfoScreen(),
-    ];
+    _pages = [FeedScreen(), SearchScreen(), MyGroupScreen(), MyInfoScreen()];
     _pageController = PageController();
   }
 
@@ -52,8 +47,8 @@ class _MainTabScreenState extends State<MainTabScreen> {
               Icons.chat_bubble,
               color: Colors.white,
             ),
-            onPressed: () =>
-                Navigator.of(context).pushNamed(MessageListScreen.routeName),
+            onPressed: () => Navigator.of(context)
+                .pushNamed(MessageRoomListScreen.routeName),
           )
         ],
       ),
@@ -63,13 +58,13 @@ class _MainTabScreenState extends State<MainTabScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
-        backgroundColor: theme.primaryColor,
         unselectedItemColor: Colors.white,
         selectedItemColor: theme.accentColor,
+        backgroundColor: theme.primaryColor,
+        type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         items: [
           BottomNavigationBarItem(
-            backgroundColor: theme.primaryColor,
             icon: Icon(Icons.featured_play_list),
             label: '',
           ),

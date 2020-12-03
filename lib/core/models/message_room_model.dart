@@ -24,7 +24,7 @@ class MessageModel {
         userId = snapshot['userId'] ?? '',
         userNickName = snapshot['userNickName'] ?? '',
         userImageUrl = snapshot['userImageUrl'] ?? '',
-        createdAt = snapshot['createdAt'] ?? Timestamp.now();
+        createdAt = snapshot['createdAt'];
 
   toJson() {
     return {
@@ -34,5 +34,28 @@ class MessageModel {
       'userImageUrl': userImageUrl,
       'createdAt': createdAt,
     };
+  }
+}
+
+class MessageRoomModel {
+  final String id;
+  final List<dynamic> users;
+
+  const MessageRoomModel({
+    this.id,
+    this.users,
+  });
+
+  MessageRoomModel.fromMap(Map snapshot, String id)
+      : id = id ?? '',
+        users = snapshot['users'];
+
+  toJson() {
+    return {};
+  }
+
+  @override
+  String toString() {
+    return id + " " + users.toString();
   }
 }

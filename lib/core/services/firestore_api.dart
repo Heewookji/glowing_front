@@ -15,11 +15,30 @@ class FirestoreApi {
     return ref.get();
   }
 
-  Stream<QuerySnapshot> streamDataCollection(
-      {String orderBy, bool desc = false}) {
+  Stream<QuerySnapshot> streamDataCollection({
+    String orderBy,
+    bool desc = false,
+  }) {
     if (orderBy != null)
       return ref.orderBy(orderBy, descending: desc).snapshots();
-    return ref.snapshots();
+    else
+      return ref.snapshots();
+  }
+
+  Stream<QuerySnapshot> streamDataSecondaryCollection(
+    String id,
+    String collectionPath, {
+    String orderBy,
+    bool desc = false,
+  }) {
+    if (orderBy != null)
+      return ref
+          .doc(id)
+          .collection(collectionPath)
+          .orderBy(orderBy, descending: desc)
+          .snapshots();
+    else
+      return ref.doc(id).collection(collectionPath).snapshots();
   }
 
   Future<DocumentSnapshot> getDocumentById(String id) {

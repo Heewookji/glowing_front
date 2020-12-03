@@ -25,7 +25,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<UserCredential> signup(
-      String email, String password, String nickname) async {
+      String email, String password) async {
     try {
       return await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);

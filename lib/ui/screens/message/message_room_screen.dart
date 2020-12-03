@@ -1,43 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:glowing_front/core/viewmodels/user_crud_model.dart';
+import 'package:glowing_front/core/models/message_room_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/providers/auth.dart';
+import '../../../core/viewmodels/message_room_crud_model.dart';
+import '../../../core/viewmodels/user_crud_model.dart';
 import '../../../locator.dart';
-import '../../widgets/chat/messages.dart';
-import '../../widgets/chat/new_message_send_bar.dart';
+import '../../widgets/message/messages.dart';
+import '../../widgets/message/new_message_send_bar.dart';
 
-class MessageScreen extends StatefulWidget {
+class MessageRoomScreen extends StatefulWidget {
   static const routeName = '/message';
   @override
-  _MessageScreenState createState() => _MessageScreenState();
+  _MessageRoomScreenState createState() => _MessageRoomScreenState();
 }
 
-class _MessageScreenState extends State<MessageScreen> {
+class _MessageRoomScreenState extends State<MessageRoomScreen> {
+  bool _isInit = true;
   Future _userFuture;
   Auth _auth;
+  Map<String, String> _arguments;
+  String _roomId;
+  String _roomName;
 
   @override
-  void initState() {
+  void didChangeDependencies() {
+    if (!_isInit) return;
+    super.didChangeDependencies();
     _auth = Provider.of<Auth>(context, listen: false);
     _userFuture = getIt<UserCRUDModel>().getUserById(_auth.user.uid);
-    super.initState();
+    _arguments =
+        ModalRoute.of(context).settings.arguments as Map<String, String>;
+    _roomId = _arguments['roomId'];
+    _roomName = _arguments['roomName'];
+    _isInit = false;
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('채팅방'),
-        actions: [
-          IconButton(
-            onPressed: () => _auth.logOut(),
-            icon: Icon(
-              Icons.logout,
-              color: Colors.white,
-            ),
-          ),
-        ],
+        title: Text(_roomName),
       ),
       body: FutureBuilder(
         future: _userFuture,
@@ -48,7 +52,7 @@ class _MessageScreenState extends State<MessageScreen> {
             child: Column(
               children: [
                 Expanded(
-                  child: Messages(),
+                  child: Messages(_roomId),
                 ),
                 NewMessage(
                   myId: _auth.user.uid,

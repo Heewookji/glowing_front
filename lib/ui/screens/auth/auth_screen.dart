@@ -20,7 +20,7 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<void> _submitAuthForm(
     String email,
     String password,
-    String nickname,
+    String nickName,
     bool isSignup,
     BuildContext ctx,
   ) async {
@@ -30,12 +30,12 @@ class _AuthScreenState extends State<AuthScreen> {
       });
       if (isSignup) {
         final userCredential = await Provider.of<Auth>(context, listen: false)
-            .signup(email, password, nickname);
+            .signup(email, password);
         await getIt<UserCRUDModel>().addUser(
-         UserModel(
+          UserModel(
             id: userCredential.user.uid,
             email: email,
-            nickName: nickname,
+            nickName: nickName,
             imageUrl:
                 'https://firebasestorage.googleapis.com/v0/b/glowing-f88cb.appspot.com/o/%E1%84%80%E1%85%A1%E1%86%AB%E1%84%83%E1%85%A1%E1%86%AF%E1%84%91%E1%85%B3.jpeg?alt=media&token=4d6ab49a-4124-4a4f-9d52-08bf0a082dd5',
             createdAt: Timestamp.now(),

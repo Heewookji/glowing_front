@@ -4,7 +4,7 @@ enum InputKind {
   Email,
   Password,
   PasswordConfirm,
-  Nickname,
+  NickName,
 }
 
 class TextInputDarkBackground extends StatelessWidget {
@@ -54,12 +54,12 @@ class TextInputDarkBackground extends StatelessWidget {
         icon = Icons.lock_outline;
         validator = _passwordConfirmValidator;
         break;
-      case InputKind.Nickname:
+      case InputKind.NickName:
         labelText = '닉네임';
         icon = Icons.person_outline;
         keyboardType = TextInputType.text;
-        validator = _nicknameValidator;
-        onSaver = _nicknameSaver;
+        validator = _nickNameValidator;
+        onSaver = _nickNameSaver;
         break;
       default:
         labelText = '';
@@ -137,13 +137,13 @@ class TextInputDarkBackground extends StatelessWidget {
     return null;
   }
 
-  String _nicknameValidator(String value) {
+  String _nickNameValidator(String value) {
     if (value.isEmpty || !(3 <= value.length && value.length < 9))
       return '닉네임은 3글자에서 8글자 사이입니다';
     return null;
   }
 
-  void _nicknameSaver(String value) {
-    formData['nickname'] = value;
+  void _nickNameSaver(String value) {
+    formData['nickName'] = value;
   }
 }

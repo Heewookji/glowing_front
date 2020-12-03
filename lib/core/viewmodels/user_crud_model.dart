@@ -8,25 +8,13 @@ class UserCRUDModel extends ChangeNotifier {
   final FirestoreApi firestoreApi;
   UserCRUDModel(this.firestoreApi);
 
-  Future<List<UserModel>> fetchUsers() async {
-    var result = await firestoreApi.getDataCollection();
-    return result.docs
-        .map((doc) => UserModel.fromMap(doc.data(), doc.id))
-        .toList();
-  }
-
-  Stream<QuerySnapshot> fetchUsersAsStream() {
-    return firestoreApi.streamDataCollection();
+  Stream<QuerySnapshot> fetchUserMessageRoomsAsStreamById(userId) {
+    return firestoreApi.streamDataSecondaryCollection(userId, 'messageRooms');
   }
 
   Future<UserModel> getUserById(String id) async {
     var doc = await firestoreApi.getDocumentById(id);
     return UserModel.fromMap(doc.data(), doc.id);
-  }
-
-  Future removeUser(String id) async {
-    await firestoreApi.removeDocument(id);
-    return;
   }
 
   Future updateUser(UserModel data, String id) async {

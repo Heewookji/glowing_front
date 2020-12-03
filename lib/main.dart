@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:glowing_front/ui/screens/message/message_room_list_screen.dart';
+import 'package:glowing_front/ui/screens/message/message_room_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'core/providers/auth.dart';
@@ -48,6 +50,10 @@ class MyApp extends StatelessWidget {
                       : AuthScreen();
             },
           ),
+          routes: {
+            MessageRoomListScreen.routeName: (ctx) => MessageRoomListScreen(),
+            MessageRoomScreen.routeName: (ctx) => MessageRoomScreen(),
+          },
           onGenerateRoute: router.Router.generateRoute,
         ),
       ),
