@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:glowing_front/core/models/message_room_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/providers/auth.dart';
-import '../../../core/viewmodels/message_room_crud_model.dart';
 import '../../../core/viewmodels/user_crud_model.dart';
 import '../../../locator.dart';
 import '../../widgets/message/messages.dart';
@@ -35,7 +33,6 @@ class _MessageRoomScreenState extends State<MessageRoomScreen> {
     _roomName = _arguments['roomName'];
     _isInit = false;
   }
-
 
   @override
   Widget build(BuildContext context) {
