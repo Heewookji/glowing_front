@@ -6,16 +6,15 @@ import 'package:provider/provider.dart';
 
 import '../../../core/providers/auth.dart';
 import '../../../core/viewmodels/message_crud_model.dart';
+import '../../../locator.dart';
 import '../chat/message_bubble.dart';
 
 class Messages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentUser = Provider.of<Auth>(context, listen: false).user;
-    final messageProvider =
-        Provider.of<MessageCRUDModel>(context, listen: false);
     return StreamBuilder(
-      stream: messageProvider.fetchMessagesAsStream(),
+      stream: getIt<MessageCRUDModel>().fetchMessagesAsStream(),
       builder: (ctx, AsyncSnapshot<QuerySnapshot> messageSnapshot) {
         if (messageSnapshot.connectionState == ConnectionState.waiting)
           return Center(

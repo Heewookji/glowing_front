@@ -181,7 +181,7 @@ class _LogoAuthFormState extends State<LogoAuthForm>
                               ),
                     onPressed: widget.isLoading ? () {} : _submit,
                     margin: const EdgeInsets.only(top: 20),
-                    height: screenHeight * 0.06,
+                    height: screenHeight * 0.065,
                   ),
                 ],
               ),

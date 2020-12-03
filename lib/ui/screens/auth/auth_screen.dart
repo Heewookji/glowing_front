@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:glowing_front/locator.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +31,7 @@ class _AuthScreenState extends State<AuthScreen> {
       if (isSignup) {
         final userCredential = await Provider.of<Auth>(context, listen: false)
             .signup(email, password, nickname);
-        await Provider.of<UserCRUDModel>(context, listen: false).addUser(
+        await getIt<UserCRUDModel>().addUser(
          UserModel(
             id: userCredential.user.uid,
             email: email,

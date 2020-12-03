@@ -1,11 +1,12 @@
 import 'package:get_it/get_it.dart';
+import 'package:glowing_front/core/services/firestore_api.dart';
 import 'core/viewmodels/message_crud_model.dart';
 import 'core/viewmodels/user_crud_model.dart';
 
 
-GetIt locator = GetIt.instance;
+GetIt getIt = GetIt.instance;
 
 void setupLocator() {
-  locator.registerLazySingleton(() => MessageCRUDModel());
-  locator.registerLazySingleton(() => UserCRUDModel());
+  getIt.registerLazySingleton(() => MessageCRUDModel(FirestoreApi('messages')));
+  getIt.registerLazySingleton(() => UserCRUDModel(FirestoreApi('users')));
 }

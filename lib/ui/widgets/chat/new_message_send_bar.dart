@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:glowing_front/core/models/message_model.dart';
 import 'package:glowing_front/core/viewmodels/message_crud_model.dart';
-import 'package:provider/provider.dart';
+import 'package:glowing_front/locator.dart';
 
 class NewMessage extends StatefulWidget {
   final String myId;
@@ -30,7 +30,7 @@ class _NewMessageState extends State<NewMessage> {
       _enteredMessage = '';
     });
     _controller.clear();
-    Provider.of<MessageCRUDModel>(context, listen: false).addMessage(
+    getIt<MessageCRUDModel>().addMessage(
       MessageModel(
         userId: widget.myId,
         userNickName: widget.myNickName,
