@@ -1,14 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glowing_front/ui/screens/tab/main/main_tab_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'core/providers/auth.dart';
 import 'locator.dart';
 import 'ui/router.dart' as router;
 import 'ui/screens/auth/auth_screen.dart';
-import 'ui/screens/message/message_screen.dart';
+import 'ui/screens/tab/main/main_tab_screen.dart';
 import 'ui/themes/root_theme_builder.dart';
 
 Future<void> main() async {

@@ -212,7 +212,6 @@ class _LogoAuthFormState extends State<LogoAuthForm>
     return TextInputDarkBackground(
       textColor: Colors.white,
       lineColor: theme.backgroundColor,
-      margin: EdgeInsets.only(bottom: 20),
       inputKind: kind,
       dependentController: dependentController,
       controllers: _textControllers,

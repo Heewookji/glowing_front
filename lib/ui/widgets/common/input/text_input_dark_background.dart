@@ -11,7 +11,6 @@ class TextInputDarkBackground extends StatelessWidget {
   const TextInputDarkBackground({
     @required this.textColor,
     @required this.lineColor,
-    @required this.margin,
     @required this.inputKind,
     @required this.dependentController,
     @required this.controllers,
@@ -22,7 +21,6 @@ class TextInputDarkBackground extends StatelessWidget {
 
   final Color textColor;
   final Color lineColor;
-  final EdgeInsets margin;
   final InputKind inputKind;
   final TextEditingController dependentController;
   final Map<String, TextEditingController> controllers;

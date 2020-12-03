@@ -8,6 +8,8 @@ import 'colors/secondary_color_dark_builder.dart';
 class RootThemeBuilder {
   static ThemeData build() {
     return ThemeData(
+      canvasColor: Colors.transparent,
+      scaffoldBackgroundColor: Colors.white,
       primarySwatch: PrimaryColorBuilder.buildMaterial(),
       accentColor: AccentColorBuilder.build(),
       backgroundColor: SecondaryColorDarkBuilder.build(),
