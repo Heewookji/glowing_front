@@ -8,6 +8,7 @@ import '../../widgets/chat/messages.dart';
 import '../../widgets/chat/new_message_send_bar.dart';
 
 class MessageScreen extends StatefulWidget {
+  static const routeName = '/message';
   @override
   _MessageScreenState createState() => _MessageScreenState();
 }

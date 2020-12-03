@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class GroupOverviewScreen extends StatelessWidget {
-  static const routeName = '/groups';
+class MyGroupScreen extends StatelessWidget {
+  static const routeName = '/myGroup';
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class GroupOverviewScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Center(
-            child: Text('group list'),
+            child: Text('myGroup screen'),
           ),
         ],
       )),

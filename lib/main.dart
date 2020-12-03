@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:glowing_front/ui/screens/tab/main/main_tab_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'core/providers/auth.dart';
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
                       child: CircularProgressIndicator(),
                     )
                   : userSnapshot.hasData
-                      ? MessageScreen()
+                      ? MainTabScreen()
                       : AuthScreen();
             },
           ),
