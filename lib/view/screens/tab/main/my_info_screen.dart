@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:glowing_front/core/providers/auth.dart';
+import 'package:glowing_front/core/services/auth/firebase_auth_service.dart';
 import 'package:provider/provider.dart';
 
 class MyInfoScreen extends StatelessWidget {
@@ -7,7 +7,7 @@ class MyInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Auth _auth = Provider.of<Auth>(context, listen: false);
+    FirebaseAuthService _auth = Provider.of<FirebaseAuthService>(context, listen: false);
     return Scaffold(
       body: Container(
           child: Column(

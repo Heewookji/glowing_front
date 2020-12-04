@@ -5,8 +5,8 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/models/user_model.dart';
-import '../../../core/providers/auth.dart';
-import '../../../core/viewmodels/user_crud_model.dart';
+import '../../../core/services/auth/firebase_auth_service.dart';
+import '../../../core/services/firestore/user_service.dart';
 import '../../widgets/auth/logo_auth_form.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -29,9 +29,9 @@ class _AuthScreenState extends State<AuthScreen> {
         _isLoading = true;
       });
       if (isSignup) {
-        final userCredential = await Provider.of<Auth>(context, listen: false)
+        final userCredential = await Provider.of<FirebaseAuthService>(context, listen: false)
             .signup(email, password);
-        await getIt<UserCRUDModel>().addUser(
+        await getIt<UserService>().addUser(
           UserModel(
             id: userCredential.user.uid,
             email: email,
@@ -42,7 +42,7 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
         );
       } else {
-        await Provider.of<Auth>(context, listen: false).login(email, password);
+        await Provider.of<FirebaseAuthService>(context, listen: false).login(email, password);
       }
     } catch (e) {
       Scaffold.of(ctx).showSnackBar(

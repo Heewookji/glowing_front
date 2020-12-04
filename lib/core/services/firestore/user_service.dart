@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../models/user_model.dart';
-import '../services/firestore_api.dart';
+import '../../models/user_model.dart';
+import 'firestore_api.dart';
 
-class UserCRUDModel extends ChangeNotifier {
-  final FirestoreApi firestoreApi;
-  UserCRUDModel(this.firestoreApi);
+class UserService extends ChangeNotifier {
+  final FirestoreApi firestoreApi = FirestoreApi('users');
+  UserService();
 
   Stream<QuerySnapshot> fetchUserMessageRoomsAsStreamById(userId) {
     return firestoreApi.streamDataSecondaryCollection(userId, 'messageRooms');

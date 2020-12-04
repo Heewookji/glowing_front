@@ -1,16 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glowing_front/ui/screens/message/message_room_list_screen.dart';
-import 'package:glowing_front/ui/screens/message/message_room_screen.dart';
-import 'package:provider/provider.dart';
-
-import 'core/providers/auth.dart';
+import 'package:glowing_front/core/services/auth/firebase_auth_service.dart';
+import 'core/themes/root_theme_builder.dart';
 import 'locator.dart';
-import 'ui/router.dart' as router;
-import 'ui/screens/auth/auth_screen.dart';
-import 'ui/screens/tab/main/main_tab_screen.dart';
-import 'ui/themes/root_theme_builder.dart';
+import 'view/router.dart' as router;
+import 'view/screens/auth/auth_screen.dart';
+import 'view/screens/tab/main/main_tab_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,36 +23,23 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (ctx) => Auth(),
-        ),
-      ],
-      child: Consumer<Auth>(
-        builder: (ctx, auth, _) => MaterialApp(
-          title: 'Glowing',
-          debugShowCheckedModeBanner: false,
-          theme: RootThemeBuilder.build(),
-          home: StreamBuilder(
-            stream: auth.authStateChanges(),
-            builder: (ctx, userSnapshot) {
-              return userSnapshot.connectionState == ConnectionState.waiting
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : userSnapshot.hasData
-                      ? MainTabScreen()
-                      : AuthScreen();
-            },
-          ),
-          routes: {
-            MessageRoomListScreen.routeName: (ctx) => MessageRoomListScreen(),
-            MessageRoomScreen.routeName: (ctx) => MessageRoomScreen(),
-          },
-          onGenerateRoute: router.Router.generateRoute,
-        ),
+    return MaterialApp(
+      title: 'Glowing',
+      debugShowCheckedModeBanner: false,
+      theme: RootThemeBuilder.build(),
+      home: StreamBuilder(
+        stream: getIt<FirebaseAuthService>().authStateChanges(),
+        builder: (ctx, userSnapshot) {
+          return userSnapshot.connectionState == ConnectionState.waiting
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : userSnapshot.hasData
+                  ? MainTabScreen()
+                  : AuthScreen();
+        },
       ),
+      onGenerateRoute: router.Router.generateRoute,
     );
   }
 }

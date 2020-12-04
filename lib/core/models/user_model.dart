@@ -5,20 +5,24 @@ class UserMessageRoomModel {
   final String roomId;
   final String name;
   final Timestamp lastMessagedAt;
-  final List<dynamic> users;
+  final List<UserModel> users;
 
-  const UserMessageRoomModel({
-    @required this.roomId,
+  UserMessageRoomModel({
+    this.roomId,
     @required this.name,
     @required this.lastMessagedAt,
     @required this.users,
   });
 
-  UserMessageRoomModel.fromMap(Map snapshot, String roomId)
-      : roomId = roomId ?? '',
-        name = snapshot['name'] ?? '',
-        lastMessagedAt = snapshot['lastMessagedAt'],
-        users = snapshot['users'];
+  factory UserMessageRoomModel.fromMap(Map json, String roomId) {
+    List<dynamic> users = json['users'];
+    return UserMessageRoomModel(
+      roomId: roomId,
+      name: json['name'],
+      lastMessagedAt: json['lastMessagedAt'],
+      users: users.map((user) => UserModel.fromMap(user, user['id'])).toList(),
+    );
+  }
 
   toJson() {
     return {
@@ -36,20 +40,20 @@ class UserModel {
   final String imageUrl;
   final Timestamp createdAt;
 
-  const UserModel({
-    @required this.id,
+  UserModel({
+    this.id,
     @required this.email,
     @required this.nickName,
     @required this.imageUrl,
     @required this.createdAt,
   });
 
-  UserModel.fromMap(Map snapshot, String id)
-      : id = id ?? '',
-        email = snapshot['email'] ?? '',
-        nickName = snapshot['nickName'] ?? '',
-        imageUrl = snapshot['imageUrl'] ?? '',
-        createdAt = snapshot['createdAt'];
+  UserModel.fromMap(Map json, String id)
+      : id = id,
+        email = json['email'],
+        nickName = json['nickName'],
+        imageUrl = json['imageUrl'],
+        createdAt = json['createdAt'];
 
   toJson() {
     return {

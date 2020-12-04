@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/providers/auth.dart';
-import '../../../core/viewmodels/user_crud_model.dart';
+import '../../../core/services/auth/firebase_auth_service.dart';
+import '../../../core/services/firestore/user_service.dart';
 import '../../../locator.dart';
-import '../../widgets/message/messages.dart';
-import '../../widgets/message/new_message_send_bar.dart';
+import '../../widgets/message/message_room/messages.dart';
+import '../../widgets/message/message_room/new_message_send_bar.dart';
 
 class MessageRoomScreen extends StatefulWidget {
   static const routeName = '/message';
@@ -16,7 +16,7 @@ class MessageRoomScreen extends StatefulWidget {
 class _MessageRoomScreenState extends State<MessageRoomScreen> {
   bool _isInit = true;
   Future _userFuture;
-  Auth _auth;
+  FirebaseAuthService _auth;
   Map<String, String> _arguments;
   String _roomId;
   String _roomName;
@@ -25,8 +25,8 @@ class _MessageRoomScreenState extends State<MessageRoomScreen> {
   void didChangeDependencies() {
     if (!_isInit) return;
     super.didChangeDependencies();
-    _auth = Provider.of<Auth>(context, listen: false);
-    _userFuture = getIt<UserCRUDModel>().getUserById(_auth.user.uid);
+    _auth = Provider.of<FirebaseAuthService>(context, listen: false);
+    _userFuture = getIt<UserService>().getUserById(_auth.user.uid);
     _arguments =
         ModalRoute.of(context).settings.arguments as Map<String, String>;
     _roomId = _arguments['roomId'];
@@ -49,7 +49,7 @@ class _MessageRoomScreenState extends State<MessageRoomScreen> {
             child: Column(
               children: [
                 Expanded(
-                  child: Messages(_roomId),
+                  child: Messages(),
                 ),
                 NewMessage(
                   myId: _auth.user.uid,

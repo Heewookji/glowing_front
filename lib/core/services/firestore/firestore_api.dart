@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../exceptions/firestore_exception.dart';
+import '../../exceptions/firestore_exception.dart';
 
 class FirestoreApi {
   final FirebaseFirestore _db = FirebaseFirestore.instance;

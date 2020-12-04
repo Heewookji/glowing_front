@@ -1,23 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:glowing_front/core/models/message_room_model.dart';
-import 'package:glowing_front/ui/widgets/common/indicator/space_indicator.dart';
+import 'package:glowing_front/view/widgets/message/message_room/messages_view_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/providers/auth.dart';
-import '../../../core/viewmodels/message_room_crud_model.dart';
-import '../../../locator.dart';
-import '../message/message_bubble.dart';
+import '../../../../core/models/message_room_model.dart';
+import '../../common/indicator/space_indicator.dart';
+import 'message_bubble.dart';
 
 class Messages extends StatelessWidget {
-  final String _roomId;
-  Messages(this._roomId);
-
   @override
   Widget build(BuildContext context) {
-    final currentUser = Provider.of<Auth>(context, listen: false).user;
+    final viewModel = Provider.of<MessageViewModel>(context);
     return StreamBuilder(
-      stream: getIt<MessageRoomCRUDModel>().fetchMessagesAsStream(_roomId),
+      stream: null,
       builder: (ctx, AsyncSnapshot<QuerySnapshot> messageSnapshot) {
         if (messageSnapshot.connectionState == ConnectionState.waiting)
           return Center(
@@ -33,7 +28,7 @@ class Messages extends StatelessWidget {
             final message = messages[index];
             return MessageBubble(
               message: message,
-              isMine: message.userId == currentUser.uid,
+              isMine: true, //message.userId == currentUser.uid,
               key: ValueKey(message.id),
             );
           },

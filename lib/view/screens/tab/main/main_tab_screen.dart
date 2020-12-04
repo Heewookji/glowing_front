@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:glowing_front/ui/screens/message/message_room_list_screen.dart';
-import 'package:glowing_front/ui/screens/tab/main/feed_screen.dart';
-import 'package:glowing_front/ui/screens/tab/main/my_group_screen.dart';
-import 'package:glowing_front/ui/screens/tab/main/my_info_screen.dart';
-import 'package:glowing_front/ui/screens/tab/main/search_screen.dart';
+import 'package:glowing_front/view/screens/message/message_room_list_screen.dart';
+import 'package:glowing_front/view/screens/tab/main/feed_screen.dart';
+import 'package:glowing_front/view/screens/tab/main/my_group_screen.dart';
+import 'package:glowing_front/view/screens/tab/main/my_info_screen.dart';
+import 'package:glowing_front/view/screens/tab/main/search_screen.dart';
 
 class MainTabScreen extends StatefulWidget {
   @override

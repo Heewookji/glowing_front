@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/models/message_room_model.dart';
-import '../../../core/viewmodels/message_room_crud_model.dart';
-import '../../../locator.dart';
+import '../../../../core/models/message_room_model.dart';
+import '../../../../core/services/firestore/message_room_service.dart';
+import '../../../../locator.dart';
 
 class NewMessage extends StatefulWidget {
   final String myId;
@@ -31,7 +31,7 @@ class _NewMessageState extends State<NewMessage> {
       _enteredMessage = '';
     });
     _controller.clear();
-    getIt<MessageRoomCRUDModel>().addMessage(
+    getIt<MessageRoomService>().addMessage(
       MessageModel(
         userId: widget.myId,
         userNickName: widget.myNickName,

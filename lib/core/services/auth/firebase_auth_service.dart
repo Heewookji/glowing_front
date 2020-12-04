@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
-import '../exceptions/auth_exception.dart';
+import '../../exceptions/auth_exception.dart';
 
-class Auth with ChangeNotifier {
+class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User get user => _auth.currentUser;
 
@@ -24,8 +23,7 @@ class Auth with ChangeNotifier {
     _auth.signOut();
   }
 
-  Future<UserCredential> signup(
-      String email, String password) async {
+  Future<UserCredential> signup(String email, String password) async {
     try {
       return await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);

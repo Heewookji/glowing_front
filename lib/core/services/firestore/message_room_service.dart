@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:glowing_front/core/models/message_room_model.dart';
 
-import '../services/firestore_api.dart';
+import 'firestore_api.dart';
 
-class MessageRoomCRUDModel extends ChangeNotifier {
-  final FirestoreApi _firestoreApi;
-  MessageRoomCRUDModel(this._firestoreApi);
+class MessageRoomService extends ChangeNotifier {
+  final FirestoreApi _firestoreApi = FirestoreApi('messageRooms');
+  MessageRoomService();
 
   Stream<QuerySnapshot> fetchMessageRoomsAsStream() {
     return _firestoreApi.streamDataCollection(orderBy: 'createdAt', desc: true);
