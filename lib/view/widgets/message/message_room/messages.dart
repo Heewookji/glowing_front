@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:glowing_front/view/widgets/message/message_room/messages_view_model.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../core/models/message_room_model.dart';
 import '../../common/indicator/space_indicator.dart';
@@ -10,7 +8,6 @@ import 'message_bubble.dart';
 class Messages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<MessageViewModel>(context);
     return StreamBuilder(
       stream: null,
       builder: (ctx, AsyncSnapshot<QuerySnapshot> messageSnapshot) {

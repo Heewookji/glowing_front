@@ -25,7 +25,7 @@ class _MessageRoomScreenState extends State<MessageRoomScreen> {
   void didChangeDependencies() {
     if (!_isInit) return;
     super.didChangeDependencies();
-    _auth = Provider.of<FirebaseAuthService>(context, listen: false);
+    _auth = getIt<FirebaseAuthService>();
     _userFuture = getIt<UserService>().getUserById(_auth.user.uid);
     _arguments =
         ModalRoute.of(context).settings.arguments as Map<String, String>;

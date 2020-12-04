@@ -29,8 +29,8 @@ class _AuthScreenState extends State<AuthScreen> {
         _isLoading = true;
       });
       if (isSignup) {
-        final userCredential = await Provider.of<FirebaseAuthService>(context, listen: false)
-            .signup(email, password);
+        final userCredential =
+            await getIt<FirebaseAuthService>().signup(email, password);
         await getIt<UserService>().addUser(
           UserModel(
             id: userCredential.user.uid,
@@ -42,7 +42,7 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
         );
       } else {
-        await Provider.of<FirebaseAuthService>(context, listen: false).login(email, password);
+        await getIt<FirebaseAuthService>().login(email, password);
       }
     } catch (e) {
       Scaffold.of(ctx).showSnackBar(
