@@ -17,10 +17,13 @@ class UserMessageRoomModel {
   factory UserMessageRoomModel.fromMap(Map json, String roomId) {
     List<dynamic> users = json['users'];
     return UserMessageRoomModel(
-      roomId: roomId,
-      name: json['name'],
-      lastMessagedAt: json['lastMessagedAt'],
-      users: users.map((user) => UserModel.fromMap(user, user['id'])).toList(),
+      roomId: roomId ?? '',
+      name: json['name'] ?? '',
+      lastMessagedAt:
+          json['lastMessagedAt'] ?? Timestamp.fromDate(DateTime(9999)),
+      users: users == null
+          ? List()
+          : users.map((user) => UserModel.fromMap(user, user['id'])).toList(),
     );
   }
 
@@ -49,11 +52,11 @@ class UserModel {
   });
 
   UserModel.fromMap(Map json, String id)
-      : id = id,
-        email = json['email'],
-        nickName = json['nickName'],
-        imageUrl = json['imageUrl'],
-        createdAt = json['createdAt'];
+      : id = id ?? '',
+        email = json['email'] ?? '',
+        nickName = json['nickName'] ?? '',
+        imageUrl = json['imageUrl'] ?? '',
+        createdAt = json['createdAt'] ?? Timestamp.fromDate(DateTime(9999));
 
   toJson() {
     return {

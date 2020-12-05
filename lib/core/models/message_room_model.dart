@@ -20,12 +20,12 @@ class MessageModel {
   });
 
   MessageModel.fromMap(Map json, String id)
-      : id = id,
-        text = json['text'],
-        userId = json['userId'],
-        userNickName = json['userNickName'],
-        userImageUrl = json['userImageUrl'],
-        createdAt = json['createdAt'];
+      : id = id ?? '',
+        text = json['text'] ?? '',
+        userId = json['userId'] ?? '',
+        userNickName = json['userNickName'] ?? '',
+        userImageUrl = json['userImageUrl'] ?? '',
+        createdAt = json['createdAt'] ?? Timestamp.fromDate(DateTime(9999));
 
   toJson() {
     return {
@@ -50,8 +50,10 @@ class MessageRoomModel {
   factory MessageRoomModel.fromMap(Map json, String id) {
     List<dynamic> users = json['users'];
     return MessageRoomModel(
-      id: id,
-      users: users.map((user) => UserModel.fromMap(user, user['id'])).toList(),
+      id: id ?? '',
+      users: users == null
+          ? List()
+          : users.map((user) => UserModel.fromMap(user, user['id'])).toList(),
     );
   }
 

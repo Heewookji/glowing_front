@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:glowing_front/view/screens/message/message_room_list_screen_view_model.dart';
+import 'package:glowing_front/view/widgets/common/indicator/space_indicator.dart';
 import 'package:stacked/stacked.dart';
 
-import '../../../core/models/user_model.dart';
 import '../../../view/screens/message/message_room_screen.dart';
-import '../../../view/widgets/common/indicator/space_indicator.dart';
 
 class MessageRoomListScreen extends StatefulWidget {
   static const routeName = '/messageRoomList';
@@ -15,75 +13,75 @@ class MessageRoomListScreen extends StatefulWidget {
 }
 
 class _MessageRoomListScreenState extends State<MessageRoomListScreen> {
+  void _navigateMessageRoom(String roomId, String roomName) {
+    Navigator.of(context).pushNamed(
+      MessageRoomScreen.routeName,
+      arguments: {
+        'roomId': roomId,
+        'roomName': roomName,
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    ThemeData theme = Theme.of(context);
     return ViewModelBuilder<MessageRoomListScreenViewModel>.reactive(
       viewModelBuilder: () => MessageRoomListScreenViewModel(),
-      onModelReady: (model) => model.init(),
       builder: (ctx, model, child) {
+        Size screenSize = MediaQuery.of(context).size;
+        ThemeData theme = Theme.of(context);
         return Scaffold(
           appBar: AppBar(
             actions: [
               IconButton(
                 icon: Icon(Icons.add),
-                onPressed: () => _addNewMessage(context, theme, screenSize),
+                onPressed: () => _addNewMessageRoom(
+                    context, model.emailController, screenSize),
               )
             ],
           ),
-          body: StreamBuilder(
-            stream: model.userMessageRoomStream,
-            builder: (_, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting)
-                return Center(child: SpaceIndicator(color: theme.accentColor));
-              final messageRooms = snapshot.data.docs
-                  .map(
-                      (doc) => UserMessageRoomModel.fromMap(doc.data(), doc.id))
-                  .toList();
-              return ListView.builder(
-                itemCount: messageRooms.length,
-                itemBuilder: (_, index) {
-                  final messageRoom = messageRooms[index];
-                  final users = messageRoom.users;
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(
-                        MessageRoomScreen.routeName,
-                        arguments: {
-                          'roomId': messageRoom.roomId,
-                          'roomName': messageRoom.name,
-                        },
-                      );
-                    },
-                    child: Card(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            vertical: screenSize.height * 0.03),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(messageRoom.name),
-                            Text(
-                                messageRoom.lastMessagedAt.toDate().toString()),
-                            for (int i = 0; i < users.length; i++)
-                              Text(users[i].nickName),
-                            Text(users.length.toString()),
-                          ],
+          body: !model.dataReady
+              ? Center(
+                  child: SpaceIndicator(
+                    color: theme.accentColor,
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: model.messageRooms.length,
+                  itemBuilder: (_, index) {
+                    final messageRoom = model.messageRooms[index];
+                    final users = messageRoom.users;
+                    return GestureDetector(
+                      onTap: () => _navigateMessageRoom(
+                          messageRoom.roomId, messageRoom.name),
+                      child: Card(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: screenSize.height * 0.03),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(messageRoom.name),
+                              Text(messageRoom.lastMessagedAt
+                                  .toDate()
+                                  .toString()),
+                              for (int i = 0; i < users.length; i++)
+                                Text(users[i].nickName),
+                              Text(users.length.toString()),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
+                    );
+                  },
+                ),
         );
       },
     );
   }
 
-  void _addNewMessage(ctx, ThemeData theme, Size screenSize) {
+  void _addNewMessageRoom(
+      ctx, TextEditingController emailController, Size screenSize) {
     showModalBottomSheet(
       context: ctx,
       builder: (ctx) => ClipRRect(
@@ -102,8 +100,8 @@ class _MessageRoomListScreenState extends State<MessageRoomListScreen> {
                     EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
                 width: screenSize.width * 0.55,
                 child: TextFormField(
-                    //controller: _textController,
-                    ),
+                  controller: emailController,
+                ),
               ),
               Container(
                 margin:
