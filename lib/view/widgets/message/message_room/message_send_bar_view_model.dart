@@ -15,13 +15,16 @@ class MessageSendBarViewModel extends ChangeNotifier {
   MessageSendBarViewModel(this._roomId, this._user);
 
   void sendMessage() {
+    if (controller.text.trim().isEmpty) return;
+    String text = controller.text;
+    controller.clear();
     getIt<MessageService>().addMessage(
       _roomId,
       MessageModel(
         userId: auth.uid,
         userNickName: _user.nickName,
         userImageUrl: _user.imageUrl,
-        text: controller.text,
+        text: text,
         createdAt: Timestamp.now(),
       ),
     );
