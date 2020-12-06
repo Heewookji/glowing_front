@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:glowing_front/core/models/message_room_model.dart';
-import 'package:glowing_front/core/models/user_model.dart';
-import 'package:glowing_front/core/services/auth/firebase_auth_service.dart';
-import 'package:glowing_front/core/services/firestore/message_service.dart';
+
+import '../../../../core/models/message_room_model.dart';
+import '../../../../core/models/user_model.dart';
+import '../../../../core/services/auth/firebase_auth_service.dart';
+import '../../../../core/services/firestore/message_service.dart';
 import '../../../../locator.dart';
 
 class MessageSendBarViewModel extends ChangeNotifier {

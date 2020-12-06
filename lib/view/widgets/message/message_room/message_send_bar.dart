@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:glowing_front/core/models/user_model.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../../../core/models/user_model.dart';
 import 'message_send_bar_view_model.dart';
 
 class MessageSendBar extends StatelessWidget {

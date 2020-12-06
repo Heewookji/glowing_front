@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:glowing_front/core/models/message_room_model.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../../../core/models/message_room_model.dart';
 import 'messages_view_model.dart';
 
 class Message extends ViewModelWidget<MessagesViewModel> {

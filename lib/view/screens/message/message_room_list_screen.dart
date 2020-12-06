@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:glowing_front/view/screens/message/message_room_list_screen_view_model.dart';
-import 'package:glowing_front/view/widgets/common/indicator/space_indicator.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../view/screens/message/message_room_screen.dart';
+import '../../widgets/common/indicator/space_indicator.dart';
+import 'message_room_list_screen_view_model.dart';
 
 class MessageRoomListScreen extends StatelessWidget {
   static const routeName = '/messageRoomList';

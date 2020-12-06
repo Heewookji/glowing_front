@@ -11,14 +11,15 @@ import '../../../locator.dart';
 class MessageRoomListScreenViewModel extends StreamViewModel<QuerySnapshot> {
   final User auth = getIt<FirebaseAuthService>().user;
   TextEditingController emailController = TextEditingController();
-
+  List<UserMessageRoomModel> messageRooms;
   @override
   Stream<QuerySnapshot> get stream =>
       getIt<UserService>().fetchUserMessageRoomsAsStreamById(auth.uid);
-  
-  List<UserMessageRoomModel> get messageRooms {
-    return data.docs
+  @override
+  void onData(QuerySnapshot data) {
+    messageRooms = data.docs
         .map((doc) => UserMessageRoomModel.fromMap(doc.data(), doc.id))
         .toList();
+    super.onData(data);
   }
 }
