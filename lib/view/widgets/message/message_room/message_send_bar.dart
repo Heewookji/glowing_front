@@ -6,13 +6,14 @@ import 'message_send_bar_view_model.dart';
 
 class MessageSendBar extends StatelessWidget {
   final UserModel _user;
+  final String _roomId;
 
-  MessageSendBar(this._user);
+  MessageSendBar(this._roomId, this._user);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MessageSendBarViewModel>.reactive(
-      viewModelBuilder: () => MessageSendBarViewModel(_user),
+      viewModelBuilder: () => MessageSendBarViewModel(_roomId, _user),
       builder: (ctx, model, child) {
         return SafeArea(
           child: Container(

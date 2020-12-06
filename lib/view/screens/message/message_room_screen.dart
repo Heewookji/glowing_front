@@ -27,7 +27,7 @@ class MessageRoomScreen extends StatelessWidget {
                       Expanded(
                         child: Messages(model.roomId),
                       ),
-                      MessageSendBar(model.data),
+                      MessageSendBar(model.roomId, model.data),
                     ],
                   ),
                 ),

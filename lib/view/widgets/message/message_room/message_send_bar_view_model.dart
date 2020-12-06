@@ -4,17 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:glowing_front/core/models/message_room_model.dart';
 import 'package:glowing_front/core/models/user_model.dart';
 import 'package:glowing_front/core/services/auth/firebase_auth_service.dart';
-import 'package:glowing_front/core/services/firestore/message_room_service.dart';
+import 'package:glowing_front/core/services/firestore/message_service.dart';
 import '../../../../locator.dart';
 
 class MessageSendBarViewModel extends ChangeNotifier {
   User auth = getIt<FirebaseAuthService>().user;
   final controller = TextEditingController();
   final UserModel _user;
-  MessageSendBarViewModel(this._user);
+  final String _roomId;
+  MessageSendBarViewModel(this._roomId, this._user);
 
   void sendMessage() {
-    getIt<MessageRoomService>().addMessage(
+    getIt<MessageService>().addMessage(
+      _roomId,
       MessageModel(
         userId: auth.uid,
         userNickName: _user.nickName,
