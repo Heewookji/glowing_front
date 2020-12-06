@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glowing_front/core/models/user_model.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../view/screens/message/message_room_screen.dart';
@@ -9,12 +10,12 @@ class MessageRoomListScreen extends StatelessWidget {
   static const routeName = '/messageRoomList';
 
   void _navigateMessageRoom(
-      BuildContext context, String roomId, String roomName) {
+      BuildContext context, List<UserModel> users, String roomId) {
     Navigator.of(context).pushNamed(
       MessageRoomScreen.routeName,
       arguments: {
         'roomId': roomId,
-        'roomName': roomName,
+        'users': users,
       },
     );
   }
@@ -36,7 +37,7 @@ class MessageRoomListScreen extends StatelessWidget {
               )
             ],
           ),
-          body: !model.dataReady
+          body: model.isBusy
               ? Center(
                   child: SpaceIndicator(
                     color: theme.accentColor,
@@ -46,10 +47,10 @@ class MessageRoomListScreen extends StatelessWidget {
                   itemCount: model.messageRooms.length,
                   itemBuilder: (_, index) {
                     final messageRoom = model.messageRooms[index];
-                    final users = messageRoom.users;
+                    final users = model.messageRoomUsers[messageRoom.roomId];
                     return GestureDetector(
                       onTap: () => _navigateMessageRoom(
-                          context, messageRoom.roomId, messageRoom.name),
+                          context, users, messageRoom.roomId),
                       child: Card(
                         child: Container(
                           padding: EdgeInsets.symmetric(
@@ -57,13 +58,7 @@ class MessageRoomListScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text(messageRoom.name),
-                              Text(messageRoom.lastMessagedAt
-                                  .toDate()
-                                  .toString()),
-                              for (int i = 0; i < users.length; i++)
-                                Text(users[i].nickName),
-                              Text(users.length.toString()),
+                              for (UserModel user in users) Text(user.nickName)
                             ],
                           ),
                         ),

@@ -3,14 +3,10 @@ import 'package:flutter/foundation.dart';
 
 class UserMessageRoomModel {
   final String roomId;
-  final String name;
-  final Timestamp lastMessagedAt;
-  final List<UserModel> users;
+  final List<String> users;
 
   UserMessageRoomModel({
     this.roomId,
-    @required this.name,
-    @required this.lastMessagedAt,
     @required this.users,
   });
 
@@ -18,19 +14,14 @@ class UserMessageRoomModel {
     List<dynamic> users = json['users'];
     return UserMessageRoomModel(
       roomId: roomId ?? '',
-      name: json['name'] ?? '',
-      lastMessagedAt:
-          json['lastMessagedAt'] ?? Timestamp.fromDate(DateTime(9999)),
       users: users == null
           ? List()
-          : users.map((user) => UserModel.fromMap(user, user['id'])).toList(),
+          : users.map((user) => user.toString()).toList(),
     );
   }
 
   toJson() {
     return {
-      'name': name,
-      'lastMessagedAt': lastMessagedAt,
       'users': users,
     };
   }

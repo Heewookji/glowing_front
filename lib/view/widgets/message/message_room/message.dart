@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:glowing_front/core/models/message_room_model.dart';
 import 'package:stacked/stacked.dart';
 
-import '../../../../core/models/message_room_model.dart';
 import 'messages_view_model.dart';
 
 class Message extends ViewModelWidget<MessagesViewModel> {
@@ -18,6 +18,7 @@ class Message extends ViewModelWidget<MessagesViewModel> {
   Widget build(BuildContext context, MessagesViewModel model) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    bool isMine = model.auth.uid == message.userId;
     return Row(
       mainAxisAlignment:
           isMine ? MainAxisAlignment.end : MainAxisAlignment.start,

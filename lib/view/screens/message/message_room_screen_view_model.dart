@@ -10,10 +10,12 @@ class MessageRoomScreenViewModel extends FutureViewModel<UserModel> {
   final User auth = getIt<FirebaseAuthService>().user;
   String roomId;
   String roomName;
+  List<UserModel> users;
 
   MessageRoomScreenViewModel(Map argument) {
     this.roomId = argument['roomId'];
     this.roomName = argument['roomName'];
+    this.users = argument['users'];
   }
 
   @override
