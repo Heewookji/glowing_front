@@ -5,25 +5,24 @@ import '../../models/user_model.dart';
 import 'firestore_api.dart';
 
 class UserService extends ChangeNotifier {
-  final FirestoreApi firestoreApi = FirestoreApi('users');
-  UserService();
+  final FirestoreApi _firestoreApi = FirestoreApi('users');
 
   Stream<QuerySnapshot> fetchUserMessageRoomsAsStreamById(userId) {
-    return firestoreApi.streamDataSecondaryCollection(userId, 'messageRooms');
+    return _firestoreApi.streamDataSecondaryCollection(userId, 'messageRooms');
   }
 
   Future<UserModel> getUserById(String id) async {
-    var doc = await firestoreApi.getDocumentById(id);
+    var doc = await _firestoreApi.getDocumentById(id);
     return UserModel.fromMap(doc.data(), doc.id);
   }
 
   Future updateUser(UserModel data, String id) async {
-    await firestoreApi.updateDocument(data.toJson(), id);
+    await _firestoreApi.updateDocument(data.toJson(), id);
     return;
   }
 
   Future addUser(UserModel data) async {
-    var result = await firestoreApi.addDocumentById(data.toJson(), data.id);
+    var result = await _firestoreApi.addDocumentById(data.toJson(), data.id);
     return result;
   }
 }

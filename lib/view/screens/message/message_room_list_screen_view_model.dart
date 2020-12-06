@@ -9,13 +9,13 @@ import '../../../core/services/firestore/user_service.dart';
 import '../../../locator.dart';
 
 class MessageRoomListScreenViewModel extends StreamViewModel<QuerySnapshot> {
-  User _user = getIt<FirebaseAuthService>().user;
+  final User auth = getIt<FirebaseAuthService>().user;
   TextEditingController emailController = TextEditingController();
 
   @override
   Stream<QuerySnapshot> get stream =>
-      getIt<UserService>().fetchUserMessageRoomsAsStreamById(_user.uid);
-
+      getIt<UserService>().fetchUserMessageRoomsAsStreamById(auth.uid);
+  
   List<UserMessageRoomModel> get messageRooms {
     return data.docs
         .map((doc) => UserMessageRoomModel.fromMap(doc.data(), doc.id))

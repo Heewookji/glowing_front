@@ -2,8 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glowing_front/core/services/auth/firebase_auth_service.dart';
-import 'package:glowing_front/view/screens/message/message_room_list_screen.dart';
-import 'package:glowing_front/view/screens/message/message_room_screen.dart';
 import 'package:glowing_front/view/themes/root_theme_builder.dart';
 import 'locator.dart';
 import 'view/router.dart' as router;

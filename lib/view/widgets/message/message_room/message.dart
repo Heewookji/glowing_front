@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:glowing_front/core/models/message_room_model.dart';
+import 'package:stacked/stacked.dart';
 
-class MessageBubble extends StatelessWidget {
-  MessageBubble({
+import 'messages_view_model.dart';
+
+class Message extends ViewModelWidget<MessagesViewModel> {
+  Message({
     @required this.message,
     @required this.isMine,
     @required this.key,
   });
   final Key key;
-  final MessageModel message;
   final bool isMine;
-  
+  final MessageModel message;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, MessagesViewModel model) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Row(

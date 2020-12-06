@@ -5,15 +5,11 @@ import 'package:stacked/stacked.dart';
 
 import '../../../view/screens/message/message_room_screen.dart';
 
-class MessageRoomListScreen extends StatefulWidget {
+class MessageRoomListScreen extends StatelessWidget {
   static const routeName = '/messageRoomList';
 
-  @override
-  _MessageRoomListScreenState createState() => _MessageRoomListScreenState();
-}
-
-class _MessageRoomListScreenState extends State<MessageRoomListScreen> {
-  void _navigateMessageRoom(String roomId, String roomName) {
+  void _navigateMessageRoom(
+      BuildContext context, String roomId, String roomName) {
     Navigator.of(context).pushNamed(
       MessageRoomScreen.routeName,
       arguments: {
@@ -53,7 +49,7 @@ class _MessageRoomListScreenState extends State<MessageRoomListScreen> {
                     final users = messageRoom.users;
                     return GestureDetector(
                       onTap: () => _navigateMessageRoom(
-                          messageRoom.roomId, messageRoom.name),
+                          context, messageRoom.roomId, messageRoom.name),
                       child: Card(
                         child: Container(
                           padding: EdgeInsets.symmetric(

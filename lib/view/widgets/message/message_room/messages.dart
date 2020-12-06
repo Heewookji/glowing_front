@@ -1,35 +1,34 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
-import '../../../../core/models/message_room_model.dart';
 import '../../common/indicator/space_indicator.dart';
-import 'message_bubble.dart';
+import 'message.dart';
+import 'messages_view_model.dart';
 
 class Messages extends StatelessWidget {
+  final String roomId;
+  Messages(this.roomId);
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: null,
-      builder: (ctx, AsyncSnapshot<QuerySnapshot> messageSnapshot) {
-        if (messageSnapshot.connectionState == ConnectionState.waiting)
-          return Center(
-            child: SpaceIndicator(color: Theme.of(context).accentColor),
-          );
-        final messages = messageSnapshot.data.docs
-            .map((doc) => MessageModel.fromMap(doc.data(), doc.id))
-            .toList();
-        return ListView.builder(
-          reverse: true,
-          itemCount: messages.length,
-          itemBuilder: (ctx, index) {
-            final message = messages[index];
-            return MessageBubble(
-              message: message,
-              isMine: true, //message.userId == currentUser.uid,
-              key: ValueKey(message.id),
-            );
-          },
-        );
+    return ViewModelBuilder<MessagesViewModel>.reactive(
+      viewModelBuilder: () => MessagesViewModel(roomId),
+      builder: (ctx, model, child) {
+        return !model.dataReady
+            ? Center(
+                child: SpaceIndicator(color: Theme.of(context).accentColor),
+              )
+            : ListView.builder(
+                reverse: true,
+                itemCount: model.messages.length,
+                itemBuilder: (ctx, index) {
+                  final message = model.messages[index];
+                  return Message(
+                    message: message,
+                    isMine: model.auth.uid == message.userId,
+                    key: ValueKey(message.id),
+                  );
+                },
+              );
       },
     );
   }

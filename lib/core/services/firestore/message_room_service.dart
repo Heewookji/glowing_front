@@ -6,7 +6,6 @@ import 'firestore_api.dart';
 
 class MessageRoomService extends ChangeNotifier {
   final FirestoreApi _firestoreApi = FirestoreApi('messageRooms');
-  MessageRoomService();
 
   Stream<QuerySnapshot> fetchMessageRoomsAsStream() {
     return _firestoreApi.streamDataCollection(orderBy: 'createdAt', desc: true);

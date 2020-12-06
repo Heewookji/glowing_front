@@ -50,6 +50,7 @@ class FirestoreApi {
   }
 
   Future<DocumentReference> addDocument(Map data) {
+    _db.
     return ref.add(data);
   }
 
