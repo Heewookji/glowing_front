@@ -24,6 +24,7 @@ class MessageRoomListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<MessageRoomListScreenViewModel>.reactive(
       viewModelBuilder: () => MessageRoomListScreenViewModel(),
+      disposeViewModel: false,
       builder: (ctx, model, child) {
         Size screenSize = MediaQuery.of(context).size;
         ThemeData theme = Theme.of(context);
@@ -54,13 +55,9 @@ class MessageRoomListScreen extends StatelessWidget {
                       child: Card(
                         child: Container(
                           padding: EdgeInsets.symmetric(
-                              vertical: screenSize.height * 0.03),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              for (UserModel user in users) Text(user.nickName)
-                            ],
-                          ),
+                              vertical: screenSize.height * 0.01),
+                          child: _buildRow(
+                              model.getOpponent(messageRoom), screenSize),
                         ),
                       ),
                     );
@@ -68,6 +65,18 @@ class MessageRoomListScreen extends StatelessWidget {
                 ),
         );
       },
+    );
+  }
+
+  Row _buildRow(Opponent user, Size screenSize) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        CircleAvatar(
+          backgroundImage: NetworkImage(user.imageUrl),
+        ),
+        Text(user.nickName)
+      ],
     );
   }
 

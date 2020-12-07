@@ -3,10 +3,12 @@ import 'package:flutter/foundation.dart';
 
 class UserMessageRoomModel {
   final String roomId;
+  final bool isGroup;
   final List<String> users;
 
   UserMessageRoomModel({
     this.roomId,
+    @required this.isGroup,
     @required this.users,
   });
 
@@ -14,6 +16,7 @@ class UserMessageRoomModel {
     List<dynamic> users = json['users'];
     return UserMessageRoomModel(
       roomId: roomId ?? '',
+      isGroup: json['isGroup'] ?? false,
       users: users == null
           ? List()
           : users.map((user) => user.toString()).toList(),
@@ -22,6 +25,7 @@ class UserMessageRoomModel {
 
   toJson() {
     return {
+      'isGroup': isGroup,
       'users': users,
     };
   }
