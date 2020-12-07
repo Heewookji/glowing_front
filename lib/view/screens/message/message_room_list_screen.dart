@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:glowing_front/core/models/user_model.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../view/screens/message/message_room_screen.dart';
@@ -10,12 +9,15 @@ class MessageRoomListScreen extends StatelessWidget {
   static const routeName = '/messageRoomList';
 
   void _navigateMessageRoom(
-      BuildContext context, List<UserModel> users, String roomId) {
+    BuildContext context,
+    String roomId,
+    String roomName,
+  ) {
     Navigator.of(context).pushNamed(
       MessageRoomScreen.routeName,
       arguments: {
         'roomId': roomId,
-        'users': users,
+        'roomName': roomName,
       },
     );
   }
@@ -48,16 +50,19 @@ class MessageRoomListScreen extends StatelessWidget {
                   itemCount: model.messageRooms.length,
                   itemBuilder: (_, index) {
                     final messageRoom = model.messageRooms[index];
-                    final users = model.messageRoomUsers[messageRoom.roomId];
+                    final opponent =
+                        model.messageRoomOpponent[messageRoom.roomId];
                     return GestureDetector(
                       onTap: () => _navigateMessageRoom(
-                          context, users, messageRoom.roomId),
+                        context,
+                        messageRoom.roomId,
+                        opponent.name,
+                      ),
                       child: Card(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: screenSize.height * 0.01),
-                          child: _buildRow(
-                              model.getOpponent(messageRoom), screenSize),
+                        child: _buildRow(
+                          opponent,
+                          screenSize,
+                          model.busy(messageRoom),
                         ),
                       ),
                     );
@@ -68,15 +73,20 @@ class MessageRoomListScreen extends StatelessWidget {
     );
   }
 
-  Row _buildRow(Opponent user, Size screenSize) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        CircleAvatar(
-          backgroundImage: NetworkImage(user.imageUrl),
-        ),
-        Text(user.nickName)
-      ],
+  Widget _buildRow(Opponent opponent, Size screenSize, bool isBusy) {
+    return AnimatedContainer(
+      height: isBusy ? 0 : screenSize.height * 0.07,
+      duration: Duration(milliseconds: 700),
+      curve: Curves.easeOutCirc,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          CircleAvatar(
+            backgroundImage: isBusy ? null : NetworkImage(opponent.imageUrl),
+          ),
+          Text(isBusy ? '' : opponent.name)
+        ],
+      ),
     );
   }
 

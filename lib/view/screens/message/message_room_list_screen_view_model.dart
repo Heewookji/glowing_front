@@ -9,7 +9,7 @@ import '../../../core/services/firestore/user_service.dart';
 import '../../../locator.dart';
 
 class Opponent {
-  String nickName;
+  String name;
   String imageUrl;
 }
 
@@ -17,7 +17,8 @@ class MessageRoomListScreenViewModel extends StreamViewModel<QuerySnapshot> {
   final User auth = getIt<FirebaseAuthService>().user;
   TextEditingController emailController = TextEditingController();
   List<UserMessageRoomModel> messageRooms;
-  Map<String, List<UserModel>> messageRoomUsers;
+  Map<String, List<UserModel>> messageRoomUsers = Map();
+  Map<String, Opponent> messageRoomOpponent = Map();
 
   @override
   Stream<QuerySnapshot> get stream =>
@@ -32,11 +33,14 @@ class MessageRoomListScreenViewModel extends StreamViewModel<QuerySnapshot> {
 
   @override
   QuerySnapshot transformData(QuerySnapshot data) {
-    //스트림 데이터 변화 로딩
-    setBusy(true);
-    messageRoomUsers = Map();
     messageRooms = data.docs.map((doc) {
-      return UserMessageRoomModel.fromMap(doc.data(), doc.id);
+      final roomId = doc.id;
+      final userMessageRoomModel =
+          UserMessageRoomModel.fromMap(doc.data(), roomId);
+      if (messageRoomOpponent != null &&
+          !messageRoomOpponent.containsKey(roomId))
+        setBusyForObject(userMessageRoomModel, true);
+      return userMessageRoomModel;
     }).toList();
     getUsers(messageRooms).then((_) => setBusy(false));
     return super.transformData(data);
@@ -46,10 +50,12 @@ class MessageRoomListScreenViewModel extends StreamViewModel<QuerySnapshot> {
     for (UserMessageRoomModel messageRoom in messageRooms) {
       final users = await getIt<UserService>().getUsersByIds(messageRoom.users);
       messageRoomUsers[messageRoom.roomId] = users;
+      setOpponent(messageRoom);
+      setBusyForObject(messageRoom, false);
     }
   }
 
-  Opponent getOpponent(UserMessageRoomModel messageRoom) {
+  void setOpponent(UserMessageRoomModel messageRoom) {
     final opponent = Opponent();
     if (messageRoom.isGroup) {
       //group 톡 일경우
@@ -57,10 +63,10 @@ class MessageRoomListScreenViewModel extends StreamViewModel<QuerySnapshot> {
       messageRoomUsers[messageRoom.roomId].forEach((user) {
         if (user.id != auth.uid) {
           opponent.imageUrl = user.imageUrl;
-          opponent.nickName = user.nickName;
+          opponent.name = user.nickName;
         }
       });
     }
-    return opponent;
+    messageRoomOpponent[messageRoom.roomId] = opponent;
   }
 }

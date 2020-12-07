@@ -6,16 +6,12 @@ class MessageModel {
   final String id;
   final String text;
   final String userId;
-  final String userNickName;
-  final String userImageUrl;
   final Timestamp createdAt;
 
   MessageModel({
     this.id,
     @required this.text,
     @required this.userId,
-    @required this.userNickName,
-    @required this.userImageUrl,
     @required this.createdAt,
   });
 
@@ -23,16 +19,12 @@ class MessageModel {
       : id = id ?? '',
         text = json['text'] ?? '',
         userId = json['userId'] ?? '',
-        userNickName = json['userNickName'] ?? '',
-        userImageUrl = json['userImageUrl'] ?? '',
         createdAt = json['createdAt'] ?? Timestamp.fromDate(DateTime(9999));
 
   toJson() {
     return {
       'text': text,
       'userId': userId,
-      'userNickName': userNickName,
-      'userImageUrl': userImageUrl,
       'createdAt': createdAt,
     };
   }

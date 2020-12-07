@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/models/message_room_model.dart';
-import '../../../../core/models/user_model.dart';
 import '../../../../core/services/auth/firebase_auth_service.dart';
 import '../../../../core/services/firestore/message_service.dart';
 import '../../../../locator.dart';
@@ -11,9 +10,8 @@ import '../../../../locator.dart';
 class MessageSendBarViewModel extends ChangeNotifier {
   User auth = getIt<FirebaseAuthService>().user;
   final controller = TextEditingController();
-  final UserModel _user;
   final String _roomId;
-  MessageSendBarViewModel(this._roomId, this._user);
+  MessageSendBarViewModel(this._roomId);
 
   void sendMessage() {
     if (controller.text.trim().isEmpty) return;
@@ -23,8 +21,6 @@ class MessageSendBarViewModel extends ChangeNotifier {
       _roomId,
       MessageModel(
         userId: auth.uid,
-        userNickName: _user.nickName,
-        userImageUrl: _user.imageUrl,
         text: text,
         createdAt: Timestamp.now(),
       ),

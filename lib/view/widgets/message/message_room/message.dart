@@ -42,7 +42,8 @@ class Message extends ViewModelWidget<MessagesViewModel> {
   Container _buildNickName() {
     return Container(
       child: Text(
-        message.userNickName,
+        '',
+        //message.userNickName,
         style: TextStyle(
           fontWeight: FontWeight.bold,
         ),
@@ -90,8 +91,8 @@ class Message extends ViewModelWidget<MessagesViewModel> {
       child: Column(
         children: [
           CircleAvatar(
-            backgroundImage: NetworkImage(message.userImageUrl),
-          ),
+              //backgroundImage: NetworkImage(),
+              ),
           SizedBox(
             height: screenHeight * 0.04,
           )
