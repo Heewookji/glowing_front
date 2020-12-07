@@ -26,7 +26,6 @@ class MessageRoomListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<MessageRoomListScreenViewModel>.reactive(
       viewModelBuilder: () => MessageRoomListScreenViewModel(),
-      disposeViewModel: false,
       builder: (ctx, model, child) {
         Size screenSize = MediaQuery.of(context).size;
         ThemeData theme = Theme.of(context);
@@ -51,11 +50,11 @@ class MessageRoomListScreen extends StatelessWidget {
                   itemBuilder: (_, index) {
                     final messageRoom = model.messageRooms[index];
                     final opponent =
-                        model.messageRoomOpponent[messageRoom.roomId];
+                        model.messageRoomOpponent[messageRoom.id];
                     return GestureDetector(
                       onTap: () => _navigateMessageRoom(
                         context,
-                        messageRoom.roomId,
+                        messageRoom.id,
                         opponent.name,
                       ),
                       child: Card(

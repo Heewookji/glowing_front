@@ -6,7 +6,7 @@ import 'package:stacked/stacked.dart';
 import '../../../core/services/auth/firebase_auth_service.dart';
 import '../../../locator.dart';
 
-class MessageRoomScreenViewModel extends StreamViewModel<QuerySnapshot> {
+class MessageRoomScreenViewModel extends StreamViewModel<DocumentSnapshot> {
   final User auth = getIt<FirebaseAuthService>().user;
   String roomId;
   String roomName;
@@ -17,6 +17,6 @@ class MessageRoomScreenViewModel extends StreamViewModel<QuerySnapshot> {
   }
 
   @override
-  Stream<QuerySnapshot> get stream =>
-      getIt<MessageRoomService>().getUsersAsStream();
+  Stream<DocumentSnapshot> get stream =>
+      getIt<MessageRoomService>().getMessageRoomAsStream(roomId);
 }

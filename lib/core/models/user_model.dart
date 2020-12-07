@@ -37,6 +37,7 @@ class UserModel {
   final String nickName;
   final String imageUrl;
   final Timestamp createdAt;
+  final List<DocumentReference> messageRooms;
 
   UserModel({
     this.id,
@@ -44,14 +45,25 @@ class UserModel {
     @required this.nickName,
     @required this.imageUrl,
     @required this.createdAt,
+    @required this.messageRooms,
   });
 
-  UserModel.fromMap(Map json, String id)
-      : id = id ?? '',
-        email = json['email'] ?? '',
-        nickName = json['nickName'] ?? '',
-        imageUrl = json['imageUrl'] ?? '',
-        createdAt = json['createdAt'] ?? Timestamp.fromDate(DateTime(9999));
+  factory UserModel.fromMap(Map json, String id) {
+    List<dynamic> messageRooms = json['messageRooms'];
+    return UserModel(
+      id: id ?? '',
+      email: json['email'] ?? '',
+      nickName: json['nickName'] ?? '',
+      imageUrl: json['imageUrl'] ?? '',
+      createdAt: json['createdAt'] ??
+          Timestamp.fromDate(
+            DateTime(9999),
+          ),
+      messageRooms: messageRooms == null
+          ? List()
+          : messageRooms.map((room) => room as DocumentReference).toList(),
+    );
+  }
 
   toJson() {
     return {

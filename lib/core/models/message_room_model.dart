@@ -32,10 +32,12 @@ class MessageModel {
 
 class MessageRoomModel {
   final String id;
-  final List<UserModel> users;
+  final bool isGroup;
+  final List<DocumentReference> users;
 
   MessageRoomModel({
     this.id,
+    @required this.isGroup,
     @required this.users,
   });
 
@@ -43,9 +45,10 @@ class MessageRoomModel {
     List<dynamic> users = json['users'];
     return MessageRoomModel(
       id: id ?? '',
+      isGroup: json['isGroup'] ?? false,
       users: users == null
           ? List()
-          : users.map((user) => UserModel.fromMap(user, user['id'])).toList(),
+          : users.map((user) => user as DocumentReference).toList(),
     );
   }
 

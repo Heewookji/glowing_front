@@ -9,12 +9,12 @@ class MessageRoomService extends ChangeNotifier {
     return _ref.orderBy('createdAt', descending: true).snapshots();
   }
 
-    Stream<QuerySnapshot> getUsersAsStream() {
-    return _ref.orderBy('createdAt', descending: true).snapshots();
+  Stream<DocumentSnapshot> getMessageRoomAsStream(String roomId) {
+    return _ref.doc(roomId).snapshots();
   }
 
-  Future<MessageRoomModel> getMessageRoomById(String id) async {
-    var doc = await _ref.doc(id).get();
+  Future<MessageRoomModel> getMessageRoomByRef(DocumentReference ref) async {
+    var doc = await ref.get();
     return MessageRoomModel.fromMap(doc.data(), doc.id);
   }
 }

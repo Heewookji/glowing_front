@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:glowing_front/core/models/message_room_model.dart';
 import 'package:glowing_front/core/models/user_model.dart';
 import 'package:glowing_front/core/services/auth/firebase_auth_service.dart';
+import 'package:glowing_front/core/services/firestore/message_room_service.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../core/services/firestore/user_service.dart';
@@ -13,16 +15,17 @@ class Opponent {
   String imageUrl;
 }
 
-class MessageRoomListScreenViewModel extends StreamViewModel<QuerySnapshot> {
+class MessageRoomListScreenViewModel extends StreamViewModel<DocumentSnapshot> {
   final User auth = getIt<FirebaseAuthService>().user;
+  UserModel userModel;
   TextEditingController emailController = TextEditingController();
-  List<UserMessageRoomModel> messageRooms;
+  List<MessageRoomModel> messageRooms;
   Map<String, List<UserModel>> messageRoomUsers = Map();
   Map<String, Opponent> messageRoomOpponent = Map();
 
   @override
-  Stream<QuerySnapshot> get stream =>
-      getIt<UserService>().fetchUserMessageRoomsAsStreamById(auth.uid);
+  Stream<DocumentSnapshot> get stream =>
+      getIt<UserService>().fetchUserAsStreamById(auth.uid);
 
   @override
   void initialise() {
@@ -32,41 +35,48 @@ class MessageRoomListScreenViewModel extends StreamViewModel<QuerySnapshot> {
   }
 
   @override
-  QuerySnapshot transformData(QuerySnapshot data) {
-    messageRooms = data.docs.map((doc) {
-      final roomId = doc.id;
-      final userMessageRoomModel =
-          UserMessageRoomModel.fromMap(doc.data(), roomId);
-      if (messageRoomOpponent != null &&
-          !messageRoomOpponent.containsKey(roomId))
-        setBusyForObject(userMessageRoomModel, true);
-      return userMessageRoomModel;
-    }).toList();
-    getUsers(messageRooms).then((_) => setBusy(false));
+  DocumentSnapshot transformData(DocumentSnapshot doc) {
+    userModel = UserModel.fromMap(doc.data(), doc.id);
+    getMessageRoomModels(userModel.messageRooms).then((newMessageRooms) {
+      messageRooms = newMessageRooms;
+      getUsers(messageRooms).then((_) => setBusy(false));
+    });
     return super.transformData(data);
   }
 
-  Future<void> getUsers(List<UserMessageRoomModel> messageRooms) async {
-    for (UserMessageRoomModel messageRoom in messageRooms) {
-      final users = await getIt<UserService>().getUsersByIds(messageRoom.users);
-      messageRoomUsers[messageRoom.roomId] = users;
+  Future<List<MessageRoomModel>> getMessageRoomModels(
+      List<DocumentReference> refs) async {
+    List<MessageRoomModel> newMessageRooms = List();
+    for (final ref in refs) {
+      final messageRoomModel =
+          await getIt<MessageRoomService>().getMessageRoomByRef(ref);
+      newMessageRooms.add(messageRoomModel);
+    }
+    return newMessageRooms;
+  }
+
+  Future<void> getUsers(List<MessageRoomModel> messageRooms) async {
+    for (MessageRoomModel messageRoom in messageRooms) {
+      final users =
+          await getIt<UserService>().getUsersByRefs(messageRoom.users);
+      messageRoomUsers[messageRoom.id] = users;
       setOpponent(messageRoom);
       setBusyForObject(messageRoom, false);
     }
   }
 
-  void setOpponent(UserMessageRoomModel messageRoom) {
+  void setOpponent(MessageRoomModel messageRoom) {
     final opponent = Opponent();
     if (messageRoom.isGroup) {
       //group 톡 일경우
     } else {
-      messageRoomUsers[messageRoom.roomId].forEach((user) {
+      messageRoomUsers[messageRoom.id].forEach((user) {
         if (user.id != auth.uid) {
           opponent.imageUrl = user.imageUrl;
           opponent.name = user.nickName;
         }
       });
     }
-    messageRoomOpponent[messageRoom.roomId] = opponent;
+    messageRoomOpponent[messageRoom.id] = opponent;
   }
 }

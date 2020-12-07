@@ -6,8 +6,8 @@ import '../../models/user_model.dart';
 class UserService extends ChangeNotifier {
   final _ref = FirebaseFirestore.instance.collection('users');
 
-  Stream<QuerySnapshot> fetchUserMessageRoomsAsStreamById(userId) {
-    return _ref.doc(userId).collection('messageRooms').snapshots();
+  Stream<DocumentSnapshot> fetchUserAsStreamById(userId) {
+    return _ref.doc(userId).snapshots();
   }
 
   Future<UserModel> getUserById(String id) async {
@@ -15,10 +15,10 @@ class UserService extends ChangeNotifier {
     return UserModel.fromMap(doc.data(), doc.id);
   }
 
-  Future<List<UserModel>> getUsersByIds(List<String> ids) async {
+  Future<List<UserModel>> getUsersByRefs(List<DocumentReference> refs) async {
     List<UserModel> users = List();
-    for (String id in ids) {
-      var doc = await _ref.doc(id).get();
+    for (DocumentReference ref in refs) {
+      var doc = await ref.get();
       users.add(UserModel.fromMap(doc.data(), doc.id));
     }
     return users;
