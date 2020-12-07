@@ -48,9 +48,12 @@ class MessageRoomListScreenViewModel extends StreamViewModel<DocumentSnapshot> {
       List<DocumentReference> refs) async {
     List<MessageRoomModel> newMessageRooms = List();
     for (final ref in refs) {
-      final messageRoomModel =
+      final messageRoom =
           await getIt<MessageRoomService>().getMessageRoomByRef(ref);
-      newMessageRooms.add(messageRoomModel);
+      // 새로운 메시지룸 로딩
+      if (!messageRoomOpponent.containsKey(messageRoom.id))
+        setBusyForObject(messageRoom, true);
+      newMessageRooms.add(messageRoom);
     }
     return newMessageRooms;
   }
