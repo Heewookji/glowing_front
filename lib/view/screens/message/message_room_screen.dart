@@ -16,20 +16,22 @@ class MessageRoomScreen extends StatelessWidget {
       builder: (ctx, model, child) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(model.roomName),
+            title: Text(
+              model.roomName,
+            ),
           ),
-          body: !model.dataReady
-              ? Container()
-              : Container(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Messages(model.roomId),
-                      ),
-                      MessageSendBar(model.roomId),
-                    ],
-                  ),
+          body: Container(
+            child: Column(
+              children: [
+                Expanded(
+                  child: model.isBusy
+                      ? Container()
+                      : Messages(model.roomId, model.users),
                 ),
+                MessageSendBar(model.roomId),
+              ],
+            ),
+          ),
         );
       },
     );

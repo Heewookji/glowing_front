@@ -10,11 +10,6 @@ class UserService extends ChangeNotifier {
     return _ref.doc(userId).snapshots();
   }
 
-  Future<UserModel> getUserById(String id) async {
-    var doc = await _ref.doc(id).get();
-    return UserModel.fromMap(doc.data(), doc.id);
-  }
-
   Future<List<UserModel>> getUsersByRefs(List<DocumentReference> refs) async {
     List<UserModel> users = List();
     for (DocumentReference ref in refs) {

@@ -49,8 +49,7 @@ class MessageRoomListScreen extends StatelessWidget {
                   itemCount: model.messageRooms.length,
                   itemBuilder: (_, index) {
                     final messageRoom = model.messageRooms[index];
-                    final opponent =
-                        model.messageRoomOpponent[messageRoom.id];
+                    final opponent = model.messageRoomOpponent[messageRoom.id];
                     return GestureDetector(
                       onTap: () => _navigateMessageRoom(
                         context,

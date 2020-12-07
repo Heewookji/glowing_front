@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:glowing_front/core/models/user_model.dart';
 
 class MessageModel {
   final String id;
@@ -33,11 +32,13 @@ class MessageModel {
 class MessageRoomModel {
   final String id;
   final bool isGroup;
+  final Timestamp lastMessagedAt;
   final List<DocumentReference> users;
 
   MessageRoomModel({
     this.id,
     @required this.isGroup,
+    @required this.lastMessagedAt,
     @required this.users,
   });
 
@@ -46,6 +47,8 @@ class MessageRoomModel {
     return MessageRoomModel(
       id: id ?? '',
       isGroup: json['isGroup'] ?? false,
+      lastMessagedAt:
+          json['lastMessagedAt'] ?? Timestamp.fromDate(DateTime(1900)),
       users: users == null
           ? List()
           : users.map((user) => user as DocumentReference).toList(),

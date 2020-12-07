@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:glowing_front/core/models/user_model.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../../core/models/message_room_model.dart';
@@ -23,5 +24,11 @@ class MessagesViewModel extends StreamViewModel<QuerySnapshot> {
         .map((doc) => MessageModel.fromMap(doc.data(), doc.id))
         .toList();
     super.onData(data);
+  }
+
+  Map<String, UserModel> getUsers(List<UserModel> users) {
+    Map<String, UserModel> userMap = Map();
+    users.forEach((user) => userMap[user.id] = user);
+    return userMap;
   }
 }
