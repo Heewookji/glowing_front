@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:glowing_front/core/models/message_room_model.dart';
 import 'package:glowing_front/core/models/user_model.dart';
@@ -9,9 +8,8 @@ import 'package:stacked/stacked.dart';
 import '../../../core/services/auth/firebase_auth_service.dart';
 import '../../../locator.dart';
 
-class MessageRoomScreenViewModel extends StreamViewModel<DocumentSnapshot> {
+class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
   final User auth = getIt<FirebaseAuthService>().user;
-  MessageRoomModel messageRoomModel;
   List<UserModel> users;
   String roomId;
   String roomName;
@@ -22,7 +20,7 @@ class MessageRoomScreenViewModel extends StreamViewModel<DocumentSnapshot> {
   }
 
   @override
-  Stream<DocumentSnapshot> get stream =>
+  Stream<MessageRoomModel> get stream =>
       getIt<MessageRoomService>().getMessageRoomAsStream(roomId);
 
   void initialise() {
@@ -32,14 +30,13 @@ class MessageRoomScreenViewModel extends StreamViewModel<DocumentSnapshot> {
   }
 
   @override
-  DocumentSnapshot transformData(DocumentSnapshot doc) {
-    messageRoomModel = MessageRoomModel.fromMap(doc.data(), doc.id);
+  MessageRoomModel transformData(MessageRoomModel messageRoomModel) {
     getIt<UserService>()
         .getUsersByRefs(messageRoomModel.users)
         .then((newUserModels) {
       users = newUserModels;
       setBusy(false);
     });
-    return super.transformData(data);
+    return super.transformData(messageRoomModel);
   }
 }

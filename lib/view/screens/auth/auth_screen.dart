@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:glowing_front/locator.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
 import '../../../core/models/user_model.dart';
 import '../../../core/services/auth/firebase_auth_service.dart';
@@ -36,6 +35,7 @@ class _AuthScreenState extends State<AuthScreen> {
             id: userCredential.user.uid,
             email: email,
             nickName: nickName,
+            messageRooms: null,
             imageUrl:
                 'https://firebasestorage.googleapis.com/v0/b/glowing-f88cb.appspot.com/o/%E1%84%80%E1%85%A1%E1%86%AB%E1%84%83%E1%85%A1%E1%86%AF%E1%84%91%E1%85%B3.jpeg?alt=media&token=4d6ab49a-4124-4a4f-9d52-08bf0a082dd5',
             createdAt: Timestamp.now(),

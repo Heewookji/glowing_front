@@ -7,21 +7,21 @@ class MessageService extends ChangeNotifier {
 
   Future addMessage(
     String roomId, {
-    @required userId,
-    @required text,
-    @required createdAt,
+    @required String userId,
+    @required String text,
+    @required Timestamp createdAt,
   }) async {
     final message = MessageModel(
       text: text,
       user: FirebaseFirestore.instance.collection('users').doc(userId),
       createdAt: createdAt,
     );
-    var result =
+    final result =
         await _ref.doc(roomId).collection('messages').add(message.toJson());
     return result;
   }
 
-  Stream<QuerySnapshot> fetchMessagesAsStream(roomId) {
+  Stream<QuerySnapshot> fetchMessagesAsStreamById(String roomId) {
     return _ref
         .doc(roomId)
         .collection('messages')

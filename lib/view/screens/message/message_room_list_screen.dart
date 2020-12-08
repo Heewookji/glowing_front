@@ -71,18 +71,19 @@ class MessageRoomListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRow(Opponent opponent, Size screenSize, bool isBusy) {
+  Widget _buildRow(Opponent opponent, Size screenSize, bool opponentIsBusy) {
     return AnimatedContainer(
-      height: isBusy ? 0 : screenSize.height * 0.07,
+      height: opponentIsBusy ? 0 : screenSize.height * 0.07,
       duration: Duration(milliseconds: 700),
       curve: Curves.easeOutCirc,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           CircleAvatar(
-            backgroundImage: isBusy ? null : NetworkImage(opponent.imageUrl),
+            backgroundImage:
+                opponentIsBusy ? null : NetworkImage(opponent.imageUrl),
           ),
-          Text(isBusy ? '' : opponent.name)
+          Text(opponentIsBusy ? '' : opponent.name)
         ],
       ),
     );

@@ -16,7 +16,7 @@ class MessagesViewModel extends StreamViewModel<QuerySnapshot> {
   MessagesViewModel(this.roomId);
   @override
   Stream<QuerySnapshot> get stream =>
-      getIt<MessageService>().fetchMessagesAsStream(roomId);
+      getIt<MessageService>().fetchMessagesAsStreamById(roomId);
 
   @override
   void onData(QuerySnapshot data) {

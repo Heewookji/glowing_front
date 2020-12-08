@@ -1,12 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:glowing_front/core/models/message_room_model.dart';
-import 'package:glowing_front/core/models/user_model.dart';
-import 'package:glowing_front/core/services/auth/firebase_auth_service.dart';
 import 'package:glowing_front/core/services/firestore/message_room_service.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../../core/models/message_room_model.dart';
+import '../../../core/models/user_model.dart';
+import '../../../core/services/auth/firebase_auth_service.dart';
 import '../../../core/services/firestore/user_service.dart';
 import '../../../locator.dart';
 
@@ -15,17 +14,16 @@ class Opponent {
   String imageUrl;
 }
 
-class MessageRoomListScreenViewModel extends StreamViewModel<DocumentSnapshot> {
+class MessageRoomListScreenViewModel extends StreamViewModel<List<String>> {
   final User auth = getIt<FirebaseAuthService>().user;
-  UserModel userModel;
   TextEditingController emailController = TextEditingController();
   List<MessageRoomModel> messageRooms;
   Map<String, List<UserModel>> messageRoomUsers = Map();
   Map<String, Opponent> messageRoomOpponent = Map();
 
   @override
-  Stream<DocumentSnapshot> get stream =>
-      getIt<UserService>().fetchUserAsStreamById(auth.uid);
+  Stream<List<String>> get stream =>
+      getIt<UserService>().getUserMessageRoomIdsAsStreamById(auth.uid);
 
   @override
   void initialise() {
@@ -35,37 +33,26 @@ class MessageRoomListScreenViewModel extends StreamViewModel<DocumentSnapshot> {
   }
 
   @override
-  DocumentSnapshot transformData(DocumentSnapshot doc) {
-    userModel = UserModel.fromMap(doc.data(), doc.id);
-    getMessageRoomModels(userModel.messageRooms).then((newMessageRooms) {
-      messageRooms = newMessageRooms;
-      getUsers(messageRooms).then((_) => setBusy(false));
-    });
-    return super.transformData(data);
+  List<String> transformData(List<String> roomIds) {
+    getMessageRooms(roomIds);
+    return super.transformData(roomIds);
   }
 
-  Future<List<MessageRoomModel>> getMessageRoomModels(
-      List<DocumentReference> refs) async {
-    List<MessageRoomModel> newMessageRooms = List();
-    for (final ref in refs) {
-      final messageRoom =
-          await getIt<MessageRoomService>().getMessageRoomByRef(ref);
-      // 새로운 메시지룸 로딩
-      if (!messageRoomOpponent.containsKey(messageRoom.id))
-        setBusyForObject(messageRoom, true);
-      newMessageRooms.add(messageRoom);
+  void getMessageRooms(List<String> roomIds) async {
+    List<MessageRoomModel> rooms = List();
+    for (final roomId in roomIds) {
+      final room = await getIt<MessageRoomService>().getMessageRoomById(roomId);
+      rooms.add(room);
+      await getUsers(room);
     }
-    return newMessageRooms;
+    messageRooms = rooms;
+    setBusy(false);
   }
 
-  Future<void> getUsers(List<MessageRoomModel> messageRooms) async {
-    for (MessageRoomModel messageRoom in messageRooms) {
-      final users =
-          await getIt<UserService>().getUsersByRefs(messageRoom.users);
-      messageRoomUsers[messageRoom.id] = users;
-      setOpponent(messageRoom);
-      setBusyForObject(messageRoom, false);
-    }
+  Future<void> getUsers(MessageRoomModel messageRoom) async {
+    messageRoomUsers[messageRoom.id] =
+        await getIt<UserService>().getUsersByRefs(messageRoom.users);
+    setOpponent(messageRoom);
   }
 
   void setOpponent(MessageRoomModel messageRoom) {
