@@ -4,26 +4,26 @@ import 'package:flutter/foundation.dart';
 class MessageModel {
   final String id;
   final String text;
-  final String userId;
+  final DocumentReference user;
   final Timestamp createdAt;
 
   MessageModel({
     this.id,
     @required this.text,
-    @required this.userId,
+    @required this.user,
     @required this.createdAt,
   });
 
   MessageModel.fromMap(Map json, String id)
       : id = id ?? '',
         text = json['text'] ?? '',
-        userId = json['userId'] ?? '',
+        user = json['user'],
         createdAt = json['createdAt'] ?? Timestamp.fromDate(DateTime(9999));
 
   toJson() {
     return {
       'text': text,
-      'userId': userId,
+      'user': user,
       'createdAt': createdAt,
     };
   }

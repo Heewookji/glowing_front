@@ -27,8 +27,8 @@ class Messages extends StatelessWidget {
                   final message = model.messages[index];
                   return Message(
                     message: message,
-                    isMine: model.auth.uid == message.userId,
-                    userInfo: users[message.userId],
+                    isMine: model.auth.uid == message.user.id,
+                    userInfo: users[message.user.id],
                     key: ValueKey(message.id),
                   );
                 },

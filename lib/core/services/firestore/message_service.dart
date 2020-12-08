@@ -5,9 +5,19 @@ import 'package:glowing_front/core/models/message_room_model.dart';
 class MessageService extends ChangeNotifier {
   final _ref = FirebaseFirestore.instance.collection('messageRooms');
 
-  Future addMessage(String roomId, MessageModel data) async {
+  Future addMessage(
+    String roomId, {
+    @required userId,
+    @required text,
+    @required createdAt,
+  }) async {
+    final message = MessageModel(
+      text: text,
+      user: FirebaseFirestore.instance.collection('users').doc(userId),
+      createdAt: createdAt,
+    );
     var result =
-        await _ref.doc(roomId).collection('messages').add(data.toJson());
+        await _ref.doc(roomId).collection('messages').add(message.toJson());
     return result;
   }
 

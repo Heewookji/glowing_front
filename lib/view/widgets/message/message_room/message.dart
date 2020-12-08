@@ -23,7 +23,6 @@ class Message extends StatelessWidget {
       builder: (ctx, model, child) {
         double screenWidth = MediaQuery.of(context).size.width;
         double screenHeight = MediaQuery.of(context).size.height;
-        bool isMine = model.auth.uid == message.userId;
         return Row(
           mainAxisAlignment:
               isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
