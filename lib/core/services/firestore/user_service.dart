@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:glowing_front/core/utils/convert_helper.dart';
 import '../../models/user_model.dart';
 
 class UserService extends ChangeNotifier {
@@ -14,8 +15,10 @@ class UserService extends ChangeNotifier {
 
   Stream<List<String>> getUserMessageRoomIdsAsStreamById(String userId) {
     return _ref.doc(userId).snapshots().map((doc) {
-      List<dynamic> init = doc.get('messageRooms');
-      final messageRoomIds = init.map((ref) => ref.id as String).toList();
+      final messageRoomIds =
+          ConvertHelper.dynamicToDocRefList(doc.get('messageRooms'))
+              .map((ref) => ref.id)
+              .toList();
       return messageRoomIds;
     });
   }
