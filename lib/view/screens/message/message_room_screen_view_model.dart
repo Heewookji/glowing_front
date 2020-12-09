@@ -20,8 +20,9 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
   }
 
   @override
-  Stream<MessageRoomModel> get stream =>
-      getIt<MessageRoomService>().getMessageRoomAsStream(roomId);
+  Stream<MessageRoomModel> get stream {
+    return getIt<MessageRoomService>().getMessageRoomAsStreamById(roomId);
+  }
 
   void initialise() {
     //초기 로딩

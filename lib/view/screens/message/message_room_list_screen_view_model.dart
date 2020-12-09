@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:glowing_front/core/services/firestore/message_room_service.dart';
@@ -14,16 +15,16 @@ class Opponent {
   String imageUrl;
 }
 
-class MessageRoomListScreenViewModel extends StreamViewModel<List<String>> {
+class MessageRoomListScreenViewModel
+    extends StreamViewModel<List<DocumentReference>> {
   final User auth = getIt<FirebaseAuthService>().user;
-  TextEditingController emailController = TextEditingController();
   List<MessageRoomModel> messageRooms;
   Map<String, List<UserModel>> messageRoomUsers = Map();
   Map<String, Opponent> messageRoomOpponent = Map();
 
   @override
-  Stream<List<String>> get stream =>
-      getIt<UserService>().getUserMessageRoomIdsAsStreamById(auth.uid);
+  Stream<List<DocumentReference>> get stream =>
+      getIt<UserService>().getUserMessageRoomRefsAsStreamById(auth.uid);
 
   @override
   void initialise() {
@@ -33,15 +34,16 @@ class MessageRoomListScreenViewModel extends StreamViewModel<List<String>> {
   }
 
   @override
-  List<String> transformData(List<String> roomIds) {
-    getMessageRooms(roomIds);
-    return super.transformData(roomIds);
+  List<DocumentReference> transformData(List<DocumentReference> roomRefs) {
+    getMessageRooms(roomRefs);
+    return super.transformData(roomRefs);
   }
 
-  void getMessageRooms(List<String> roomIds) async {
+  void getMessageRooms(List<DocumentReference> roomRefs) async {
     List<MessageRoomModel> rooms = List();
-    for (final roomId in roomIds) {
-      final room = await getIt<MessageRoomService>().getMessageRoomById(roomId);
+    for (final roomRef in roomRefs) {
+      final room =
+          await getIt<MessageRoomService>().getMessageRoomByRef(roomRef);
       rooms.add(room);
       await getUsers(room);
     }

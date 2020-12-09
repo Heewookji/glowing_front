@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glowing_front/view/widgets/message/message_room_list/message_room_create.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../view/screens/message/message_room_screen.dart';
@@ -27,15 +28,17 @@ class MessageRoomListScreen extends StatelessWidget {
     return ViewModelBuilder<MessageRoomListScreenViewModel>.reactive(
       viewModelBuilder: () => MessageRoomListScreenViewModel(),
       builder: (ctx, model, child) {
-        Size screenSize = MediaQuery.of(context).size;
-        ThemeData theme = Theme.of(context);
+        Size screenSize = MediaQuery.of(ctx).size;
+        ThemeData theme = Theme.of(ctx);
         return Scaffold(
           appBar: AppBar(
             actions: [
               IconButton(
                 icon: Icon(Icons.add),
-                onPressed: () => _addNewMessageRoom(
-                    context, model.emailController, screenSize),
+                onPressed: () => showModalBottomSheet(
+                  context: ctx,
+                  builder: (ctx) => MessageRoomCreate(),
+                ),
               )
             ],
           ),
@@ -85,47 +88,6 @@ class MessageRoomListScreen extends StatelessWidget {
           ),
           Text(opponentIsBusy ? '' : opponent.name)
         ],
-      ),
-    );
-  }
-
-  void _addNewMessageRoom(
-      ctx, TextEditingController emailController, Size screenSize) {
-    showModalBottomSheet(
-      context: ctx,
-      builder: (ctx) => ClipRRect(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        child: Container(
-          color: Colors.white,
-          height: screenSize.height * 0.2,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(
-                margin:
-                    EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
-                width: screenSize.width * 0.55,
-                child: TextFormField(
-                  controller: emailController,
-                ),
-              ),
-              Container(
-                margin:
-                    EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
-                child: FlatButton(
-                  onPressed: () {
-                    Navigator.of(ctx)
-                        .pushReplacementNamed(MessageRoomScreen.routeName);
-                  },
-                  child: Text('채팅시작'),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

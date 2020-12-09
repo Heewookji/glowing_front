@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:glowing_front/core/services/auth/firebase_auth_service.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../locator.dart';
 

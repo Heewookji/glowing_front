@@ -13,13 +13,10 @@ class UserService extends ChangeNotifier {
         .map((doc) => UserModel.fromMap(doc.data(), doc.id));
   }
 
-  Stream<List<String>> getUserMessageRoomIdsAsStreamById(String userId) {
+  Stream<List<DocumentReference>> getUserMessageRoomRefsAsStreamById(
+      String userId) {
     return _ref.doc(userId).snapshots().map((doc) {
-      final messageRoomIds =
-          ConvertHelper.dynamicToDocRefList(doc.get('messageRooms'))
-              .map((ref) => ref.id)
-              .toList();
-      return messageRoomIds;
+      return ConvertHelper.dynamicToDocRefList(doc.get('messageRooms'));
     });
   }
 
