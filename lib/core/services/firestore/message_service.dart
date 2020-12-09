@@ -21,11 +21,16 @@ class MessageService extends ChangeNotifier {
     return result;
   }
 
-  Stream<QuerySnapshot> fetchMessagesAsStreamById(String roomId) {
+  Stream<List<MessageModel>> fetchMessagesAsStreamById(String roomId) {
     return _ref
         .doc(roomId)
         .collection('messages')
         .orderBy('createdAt', descending: true)
-        .snapshots();
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs
+          .map((doc) => MessageModel.fromMap(doc.data(), doc.id))
+          .toList();
+    });
   }
 }

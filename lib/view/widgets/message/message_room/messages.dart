@@ -13,9 +13,8 @@ class Messages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MessagesViewModel>.reactive(
-      viewModelBuilder: () => MessagesViewModel(roomId),
+      viewModelBuilder: () => MessagesViewModel(roomId, userModels),
       builder: (ctx, model, child) {
-        final users = model.getUsers(userModels);
         return !model.dataReady
             ? Center(
                 child: SpaceIndicator(color: Theme.of(context).accentColor),
@@ -28,7 +27,7 @@ class Messages extends StatelessWidget {
                   return Message(
                     message: message,
                     isMine: model.auth.uid == message.user.id,
-                    userInfo: users[message.user.id],
+                    userInfo: model.userMap[message.user.id],
                     key: ValueKey(message.id),
                   );
                 },
