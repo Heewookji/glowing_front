@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glowing_front/core/models/user_model.dart';
 import 'package:glowing_front/view/widgets/message/message_room_list/message_room_create.dart';
 import 'package:stacked/stacked.dart';
 
@@ -35,11 +36,14 @@ class MessageRoomListScreen extends StatelessWidget {
             actions: [
               IconButton(
                 icon: Icon(Icons.add),
-                onPressed: () => showModalBottomSheet(
-                  context: ctx,
-                  builder: (ctx) => MessageRoomCreate(),
-                ),
-              )
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: ctx,
+                    builder: (_) =>
+                        MessageRoomCreate(model.messageRoomOpponent),
+                  );
+                },
+              ),
             ],
           ),
           body: model.isBusy
@@ -57,13 +61,12 @@ class MessageRoomListScreen extends StatelessWidget {
                       onTap: () => _navigateMessageRoom(
                         context,
                         messageRoom.id,
-                        opponent.name,
+                        opponent.nickName,
                       ),
                       child: Card(
                         child: _buildRow(
                           opponent,
                           screenSize,
-                          model.busy(messageRoom),
                         ),
                       ),
                     );
@@ -74,19 +77,16 @@ class MessageRoomListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRow(Opponent opponent, Size screenSize, bool opponentIsBusy) {
-    return AnimatedContainer(
-      height: opponentIsBusy ? 0 : screenSize.height * 0.07,
-      duration: Duration(milliseconds: 700),
-      curve: Curves.easeOutCirc,
+  Widget _buildRow(UserModel opponent, Size screenSize) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: screenSize.height * 0.01),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           CircleAvatar(
-            backgroundImage:
-                opponentIsBusy ? null : NetworkImage(opponent.imageUrl),
+            backgroundImage: NetworkImage(opponent.imageUrl),
           ),
-          Text(opponentIsBusy ? '' : opponent.name)
+          Text(opponent.nickName)
         ],
       ),
     );

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:glowing_front/view/screens/message/message_room_list_screen.dart';
-import 'package:glowing_front/view/screens/tab/main/feed_screen.dart';
-import 'package:glowing_front/view/screens/tab/main/my_group_screen.dart';
-import 'package:glowing_front/view/screens/tab/main/my_info_screen.dart';
-import 'package:glowing_front/view/screens/tab/main/search_screen.dart';
+
+import '../../message/message_room_list_screen.dart';
+import 'feed_screen.dart';
+import 'my_group_screen.dart';
+import 'my_info_screen.dart';
+import 'search_screen.dart';
 
 class MainTabScreen extends StatefulWidget {
   @override
@@ -32,7 +33,7 @@ class _MainTabScreenState extends State<MainTabScreen> {
     setState(() {
       _selectedIndex = index;
       _pageController.animateToPage(index,
-          duration: Duration(milliseconds: 150), curve: Curves.easeOutCirc);
+          duration: Duration(milliseconds: 160), curve: Curves.easeOutCirc);
     });
   }
 
