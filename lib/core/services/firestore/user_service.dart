@@ -17,7 +17,13 @@ class UserService extends ChangeNotifier {
   Stream<List<DocumentReference>> getUserMessageRoomRefsAsStreamById(
       String userId) {
     return _ref.doc(userId).snapshots().map((doc) {
-      return ConvertHelper.dynamicToDocRefList(doc.get('messageRooms'));
+      try {
+        return ConvertHelper.dynamicToDocRefList(doc.get('messageRooms'));
+      } catch (e, trace) {
+        print(e);
+        print(trace);
+      }
+      return null;
     });
   }
 
@@ -41,5 +47,13 @@ class UserService extends ChangeNotifier {
   Future addUser(UserModel data) async {
     final result = await _ref.add(data.toJson());
     return result;
+  }
+
+  Future addUsersMessageRoom(List<String> userIds, String roomId) async {
+    for (String id in userIds) {
+      await _ref.doc(id).update({
+        'messageRooms': [roomId]
+      });
+    }
   }
 }

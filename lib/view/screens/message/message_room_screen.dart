@@ -28,7 +28,7 @@ class MessageRoomScreen extends StatelessWidget {
                       ? Container()
                       : Messages(model.roomId, model.users),
                 ),
-                MessageSendBar(model.roomId),
+                MessageSendBar(model.roomId, model.opponentId),
               ],
             ),
           ),

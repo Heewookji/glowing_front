@@ -4,14 +4,14 @@ import 'package:stacked/stacked.dart';
 import 'message_send_bar_view_model.dart';
 
 class MessageSendBar extends StatelessWidget {
-  final String _roomId;
-
-  MessageSendBar(this._roomId);
+  final String roomId;
+  final String opponentId;
+  MessageSendBar(this.roomId, this.opponentId);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MessageSendBarViewModel>.reactive(
-      viewModelBuilder: () => MessageSendBarViewModel(_roomId),
+      viewModelBuilder: () => MessageSendBarViewModel(roomId, opponentId),
       builder: (ctx, model, child) {
         return SafeArea(
           child: Container(

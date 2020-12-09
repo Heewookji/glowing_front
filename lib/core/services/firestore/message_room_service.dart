@@ -15,4 +15,18 @@ class MessageRoomService extends ChangeNotifier {
     final doc = await ref.get();
     return MessageRoomModel.fromMap(doc.data(), doc.id);
   }
+
+  Future<String> addOneOnOneMessageRoom(
+      {@required List<String> userIds}) async {
+    final users = userIds
+        .map((id) => FirebaseFirestore.instance.collection('users').doc(id))
+        .toList();
+    final messageRoom = MessageRoomModel(
+      isGroup: false,
+      users: users,
+      lastMessagedAt: Timestamp.now(),
+    );
+    final ref = await _ref.add(messageRoom.toJson());
+    return ref.id;
+  }
 }

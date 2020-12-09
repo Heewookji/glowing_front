@@ -13,10 +13,12 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
   List<UserModel> users;
   String roomId;
   String roomName;
+  String opponentId;
 
   MessageRoomScreenViewModel(Map<String, Object> argument) {
     this.roomId = argument['roomId'];
     this.roomName = argument['roomName'];
+    this.opponentId = argument['opponentId'];
   }
 
   @override

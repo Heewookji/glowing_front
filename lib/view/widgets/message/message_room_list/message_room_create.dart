@@ -17,9 +17,13 @@ class MessageRoomCreate extends StatelessWidget {
         'roomName': model.existOpponent.nickName
       };
     } else {
+      // 새로운 1대 1 채팅방을 만들 경우
       final opponentUser = await model.findOpponentUser(ctx);
       if (model.hasError) return;
-      arguments = {'roomName': opponentUser.nickName};
+      arguments = {
+        'roomName': opponentUser.nickName,
+        'opponentId': opponentUser.id,
+      };
     }
     Navigator.of(ctx).pushReplacementNamed(
       MessageRoomScreen.routeName,
