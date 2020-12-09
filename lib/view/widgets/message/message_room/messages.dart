@@ -21,9 +21,9 @@ class Messages extends StatelessWidget {
               )
             : ListView.builder(
                 reverse: true,
-                itemCount: model.messages.length,
+                itemCount: model.data.length,
                 itemBuilder: (ctx, index) {
-                  final message = model.messages[index];
+                  final message = model.data[index];
                   return Message(
                     message: message,
                     isMine: model.auth.uid == message.user.id,

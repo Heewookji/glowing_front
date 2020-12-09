@@ -11,7 +11,6 @@ class MessagesViewModel extends StreamViewModel<List<MessageModel>> {
   final User auth = getIt<FirebaseAuthService>().user;
   final String roomId;
   Map<String, UserModel> userMap;
-  List<MessageModel> messages;
 
   MessagesViewModel(this.roomId, userModels) {
     userMap = Map();
