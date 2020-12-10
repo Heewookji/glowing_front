@@ -39,11 +39,18 @@ class MessageRoomListScreen extends StatelessWidget {
                 onPressed: () {
                   showModalBottomSheet(
                     context: context,
-                    builder: (_) => MessageRoomCreate(model.messageRoomOpponents),
+                    builder: (_) =>
+                        MessageRoomCreate(model.messageRoomOpponents),
                   );
                 },
               ),
             ],
+          ),
+          floatingActionButton: IconButton(
+            icon: Icon(Icons.play_arrow),
+            onPressed: () {
+              
+            },
           ),
           body: model.isBusy
               ? Center(
@@ -52,10 +59,11 @@ class MessageRoomListScreen extends StatelessWidget {
                   ),
                 )
               : ListView.builder(
-                  itemCount: model.messageRooms.length,
+                  itemCount: model.data.length,
                   itemBuilder: (_, index) {
-                    final messageRoom = model.messageRooms[index];
+                    final messageRoom = model.data[index];
                     final opponent = model.messageRoomOpponents[messageRoom.id];
+                    if (model.busy(messageRoom)) return null;
                     return GestureDetector(
                       onTap: () => _navigateMessageRoom(
                         context,
@@ -63,10 +71,7 @@ class MessageRoomListScreen extends StatelessWidget {
                         opponent.nickName,
                       ),
                       child: Card(
-                        child: _buildRow(
-                          opponent,
-                          screenSize,
-                        ),
+                        child: _buildRow(opponent, screenSize, theme),
                       ),
                     );
                   },
@@ -76,7 +81,7 @@ class MessageRoomListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRow(UserModel opponent, Size screenSize) {
+  Widget _buildRow(UserModel opponent, Size screenSize, ThemeData theme) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: screenSize.height * 0.01),
       child: Row(

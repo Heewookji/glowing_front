@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:stacked/stacked.dart';
 
@@ -10,15 +9,14 @@ import '../../../core/services/firestore/user_service.dart';
 import '../../../locator.dart';
 
 class MessageRoomListScreenViewModel
-    extends StreamViewModel<List<DocumentReference>> {
+    extends StreamViewModel<List<MessageRoomModel>> {
   final User auth = getIt<FirebaseAuthService>().user;
-  List<MessageRoomModel> messageRooms;
   Map<String, List<UserModel>> messageRoomUsers = Map();
   Map<String, UserModel> messageRoomOpponents = Map();
 
   @override
-  Stream<List<DocumentReference>> get stream =>
-      getIt<UserService>().getUserMessageRoomRefsAsStreamById(auth.uid);
+  Stream<List<MessageRoomModel>> get stream =>
+      getIt<MessageRoomService>().getMessageRoomsAsStreamByUserId(auth.uid);
 
   @override
   void initialise() {
@@ -28,27 +26,19 @@ class MessageRoomListScreenViewModel
   }
 
   @override
-  List<DocumentReference> transformData(List<DocumentReference> roomRefs) {
-    getMessageRooms(roomRefs);
-    return super.transformData(roomRefs);
-  }
-
-  void getMessageRooms(List<DocumentReference> roomRefs) async {
-    List<MessageRoomModel> rooms = List();
-    for (final roomRef in roomRefs) {
-      final room =
-          await getIt<MessageRoomService>().getMessageRoomByRef(roomRef);
-      rooms.add(room);
-      await getUsers(room);
-    }
-    messageRooms = rooms;
-    setBusy(false);
+  List<MessageRoomModel> transformData(List<MessageRoomModel> rooms) {
+    for (final room in rooms) getUsers(room);
+    return super.transformData(rooms);
   }
 
   Future<void> getUsers(MessageRoomModel messageRoom) async {
+    if (!messageRoomOpponents.containsKey(messageRoom.id))
+      setBusyForObject(messageRoom, true);
     messageRoomUsers[messageRoom.id] =
         await getIt<UserService>().getUsersByRefs(messageRoom.users);
     setOpponent(messageRoom);
+    setBusy(false);
+    setBusyForObject(messageRoom, false);
   }
 
   void setOpponent(MessageRoomModel messageRoom) {
@@ -63,5 +53,4 @@ class MessageRoomListScreenViewModel
       }
     }
   }
-
 }

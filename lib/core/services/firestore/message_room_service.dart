@@ -3,11 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:glowing_front/core/models/message_room_model.dart';
 
 class MessageRoomService extends ChangeNotifier {
-  final _ref = FirebaseFirestore.instance.collection('messageRooms');
+  final _collection = FirebaseFirestore.instance.collection('messageRooms');
+  final _usersCollection = FirebaseFirestore.instance.collection('users');
 
   Stream<MessageRoomModel> getMessageRoomAsStreamById(String roomId) {
-    return _ref.doc(roomId).snapshots().map(
+    return _collection.doc(roomId).snapshots().map(
           (doc) => MessageRoomModel.fromMap(doc.data(), doc.id),
+        );
+  }
+
+  Stream<List<MessageRoomModel>> getMessageRoomsAsStreamByUserId(
+      String userId) {
+    return _collection
+        .where('users', arrayContains: _usersCollection.doc(userId))
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => MessageRoomModel.fromMap(doc.data(), doc.id))
+              .toList(),
         );
   }
 
@@ -26,7 +39,7 @@ class MessageRoomService extends ChangeNotifier {
       users: users,
       lastMessagedAt: Timestamp.now(),
     );
-    final ref = await _ref.add(messageRoom.toJson());
+    final ref = await _collection.add(messageRoom.toJson());
     return ref.id;
   }
 }

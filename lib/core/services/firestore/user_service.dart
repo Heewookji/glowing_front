@@ -1,31 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:glowing_front/core/exceptions/user_exception.dart';
-import 'package:glowing_front/core/utils/convert_helper.dart';
 import '../../models/user_model.dart';
 
 class UserService extends ChangeNotifier {
   final _ref = FirebaseFirestore.instance.collection('users');
-
-  Stream<UserModel> getUserAsStreamById(String userId) {
-    return _ref
-        .doc(userId)
-        .snapshots()
-        .map((doc) => UserModel.fromMap(doc.data(), doc.id));
-  }
-
-  Stream<List<DocumentReference>> getUserMessageRoomRefsAsStreamById(
-      String userId) {
-    return _ref.doc(userId).snapshots().map((doc) {
-      try {
-        return ConvertHelper.dynamicToDocRefList(doc.get('messageRooms'));
-      } catch (e, trace) {
-        print(e);
-        print(trace);
-      }
-      return null;
-    });
-  }
 
   Future<List<UserModel>> getUsersByRefs(List<DocumentReference> refs) async {
     List<UserModel> users = List();
