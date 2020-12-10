@@ -28,19 +28,7 @@ class _AuthScreenState extends State<AuthScreen> {
         _isLoading = true;
       });
       if (isSignup) {
-        final userCredential =
-            await getIt<FirebaseAuthService>().signup(email, password);
-        await getIt<UserService>().addUser(
-          UserModel(
-            id: userCredential.user.uid,
-            email: email,
-            nickName: nickName,
-            messageRooms: null,
-            imageUrl:
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThLP6xJXBY_W2tT5waakogfnpHk4uhpVTy7A&usqp=CAU',
-            createdAt: Timestamp.now(),
-          ),
-        );
+        await getIt<FirebaseAuthService>().signup(email, password, nickName);
       } else {
         await getIt<FirebaseAuthService>().login(email, password);
       }

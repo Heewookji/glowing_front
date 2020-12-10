@@ -7,7 +7,6 @@ class UserModel {
   final String nickName;
   final String imageUrl;
   final Timestamp createdAt;
-  final List<DocumentReference> messageRooms;
 
   UserModel({
     this.id,
@@ -15,11 +14,9 @@ class UserModel {
     @required this.nickName,
     @required this.imageUrl,
     @required this.createdAt,
-    @required this.messageRooms,
   });
 
   factory UserModel.fromMap(Map json, String id) {
-    List<dynamic> messageRooms = json['messageRooms'];
     return UserModel(
       id: id ?? '',
       email: json['email'] ?? '',
@@ -29,9 +26,6 @@ class UserModel {
           Timestamp.fromDate(
             DateTime(9999),
           ),
-      messageRooms: messageRooms == null
-          ? List()
-          : messageRooms.map((room) => room as DocumentReference).toList(),
     );
   }
 

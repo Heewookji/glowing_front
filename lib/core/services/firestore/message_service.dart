@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:glowing_front/core/models/message_room_model.dart';
 
 class MessageService extends ChangeNotifier {
-  final _ref = FirebaseFirestore.instance.collection('messageRooms');
+  final _collection = FirebaseFirestore.instance.collection('messageRooms');
 
   Future addMessage(
     String roomId, {
@@ -13,16 +13,16 @@ class MessageService extends ChangeNotifier {
   }) async {
     final message = MessageModel(
       text: text,
-      user: FirebaseFirestore.instance.collection('users').doc(userId),
+      userId: userId,
       createdAt: createdAt,
     );
     final result =
-        await _ref.doc(roomId).collection('messages').add(message.toJson());
+        await _collection.doc(roomId).collection('messages').add(message.toJson());
     return result;
   }
 
   Stream<List<MessageModel>> fetchMessagesAsStreamById(String roomId) {
-    return _ref
+    return _collection
         .doc(roomId)
         .collection('messages')
         .orderBy('createdAt', descending: true)

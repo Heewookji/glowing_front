@@ -1,29 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:glowing_front/core/utils/convert_helper.dart';
 
 class MessageModel {
   final String id;
   final String text;
-  final DocumentReference user;
+  final String userId;
   final Timestamp createdAt;
 
   MessageModel({
     this.id,
     @required this.text,
-    @required this.user,
+    @required this.userId,
     @required this.createdAt,
   });
 
   MessageModel.fromMap(Map json, String id)
       : id = id ?? '',
         text = json['text'] ?? '',
-        user = json['user'],
+        userId = json['userId'],
         createdAt = json['createdAt'] ?? Timestamp.fromDate(DateTime(9999));
 
   toJson() {
     return {
       'text': text,
-      'user': user,
+      'userId': userId,
       'createdAt': createdAt,
     };
   }
@@ -33,7 +34,7 @@ class MessageRoomModel {
   final String id;
   final bool isGroup;
   final Timestamp lastMessagedAt;
-  final List<DocumentReference> users;
+  final List<String> users;
 
   MessageRoomModel({
     this.id,
@@ -43,19 +44,22 @@ class MessageRoomModel {
   });
 
   factory MessageRoomModel.fromMap(Map json, String id) {
-    List<dynamic> users = json['users'];
     return MessageRoomModel(
       id: id ?? '',
       isGroup: json['isGroup'] ?? false,
       lastMessagedAt:
           json['lastMessagedAt'] ?? Timestamp.fromDate(DateTime(1900)),
-      users: users == null
+      users: json['users'] == null
           ? List()
-          : users.map((user) => user as DocumentReference).toList(),
+          : ConvertHelper.dynamicToStringList(json['users']),
     );
   }
 
   toJson() {
-    return {};
+    return {
+      'isGroup': isGroup,
+      'users': users,
+      'lastMessagedAt': lastMessagedAt,
+    };
   }
 }

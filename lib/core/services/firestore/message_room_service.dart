@@ -4,7 +4,6 @@ import 'package:glowing_front/core/models/message_room_model.dart';
 
 class MessageRoomService extends ChangeNotifier {
   final _collection = FirebaseFirestore.instance.collection('messageRooms');
-  final _usersCollection = FirebaseFirestore.instance.collection('users');
 
   Stream<MessageRoomModel> getMessageRoomAsStreamById(String roomId) {
     return _collection.doc(roomId).snapshots().map(
@@ -14,32 +13,28 @@ class MessageRoomService extends ChangeNotifier {
 
   Stream<List<MessageRoomModel>> getMessageRoomsAsStreamByUserId(
       String userId) {
-    return _collection
-        .where('users', arrayContains: _usersCollection.doc(userId))
-        .snapshots()
-        .map(
+    return _collection.where('users', arrayContains: userId).snapshots().map(
           (snapshot) => snapshot.docs
               .map((doc) => MessageRoomModel.fromMap(doc.data(), doc.id))
               .toList(),
         );
   }
 
-  Future<MessageRoomModel> getMessageRoomByRef(DocumentReference ref) async {
-    final doc = await ref.get();
-    return MessageRoomModel.fromMap(doc.data(), doc.id);
+  Future<String> addMessageRoom({@required MessageRoomModel room}) async {
+    DocumentReference ref;
+    if (room.isGroup) {
+    } else {
+      final messageRoom = MessageRoomModel(
+        isGroup: false,
+        users: room.users,
+        lastMessagedAt: room.lastMessagedAt,
+      );
+      ref = await _collection.add(messageRoom.toJson());
+    }
+    return ref.id;
   }
 
-  Future<String> addOneOnOneMessageRoom(
-      {@required List<String> userIds}) async {
-    final users = userIds
-        .map((id) => FirebaseFirestore.instance.collection('users').doc(id))
-        .toList();
-    final messageRoom = MessageRoomModel(
-      isGroup: false,
-      users: users,
-      lastMessagedAt: Timestamp.now(),
-    );
-    final ref = await _collection.add(messageRoom.toJson());
-    return ref.id;
+  Future<void> updateMessageRoom(String roomId, Map<String, dynamic> map) async {
+    await _collection.doc(roomId).update(map);
   }
 }

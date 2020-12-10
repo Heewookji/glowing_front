@@ -11,8 +11,8 @@ import '../../../locator.dart';
 class MessageRoomListScreenViewModel
     extends StreamViewModel<List<MessageRoomModel>> {
   final User auth = getIt<FirebaseAuthService>().user;
-  Map<String, List<UserModel>> messageRoomUsers = Map();
-  Map<String, UserModel> messageRoomOpponents = Map();
+  Map<String, List<UserModel>> messageRoomUsers;
+  Map<String, UserModel> messageRoomOpponents;
 
   @override
   Stream<List<MessageRoomModel>> get stream =>
@@ -27,18 +27,23 @@ class MessageRoomListScreenViewModel
 
   @override
   List<MessageRoomModel> transformData(List<MessageRoomModel> rooms) {
-    for (final room in rooms) getUsers(room);
+    messageRoomUsers = Map();
+    messageRoomOpponents = Map();
+    getUsers(rooms).then((value) {
+      if (isBusy) setBusy(false);
+    });
     return super.transformData(rooms);
   }
 
-  Future<void> getUsers(MessageRoomModel messageRoom) async {
-    if (!messageRoomOpponents.containsKey(messageRoom.id))
-      setBusyForObject(messageRoom, true);
-    messageRoomUsers[messageRoom.id] =
-        await getIt<UserService>().getUsersByRefs(messageRoom.users);
-    setOpponent(messageRoom);
-    setBusy(false);
-    setBusyForObject(messageRoom, false);
+  Future<void> getUsers(List<MessageRoomModel> rooms) async {
+    for (final room in rooms) {
+      if (!messageRoomOpponents.containsKey(room.id))
+        setBusyForObject(room, true);
+      messageRoomUsers[room.id] =
+          await getIt<UserService>().getUsersByIds(room.users);
+      setOpponent(room);
+      setBusyForObject(room, false);
+    }
   }
 
   void setOpponent(MessageRoomModel messageRoom) {

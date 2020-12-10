@@ -12,7 +12,7 @@ class MessagesViewModel extends StreamViewModel<List<MessageModel>> {
   final String roomId;
   Map<String, UserModel> userMap;
 
-  MessagesViewModel(this.roomId, userModels) {
+  MessagesViewModel(this.roomId, List<UserModel> userModels) {
     userMap = Map();
     userModels.forEach((user) => userMap[user.id] = user);
   }
