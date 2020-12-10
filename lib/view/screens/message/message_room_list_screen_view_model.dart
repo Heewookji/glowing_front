@@ -15,15 +15,15 @@ class MessageRoomListScreenViewModel
   Map<String, UserModel> messageRoomOpponents;
 
   @override
-  Stream<List<MessageRoomModel>> get stream =>
-      getIt<MessageRoomService>().getMessageRoomsAsStreamByUserId(auth.uid);
-
-  @override
   void initialise() {
     //초기 로딩
     setBusy(true);
     super.initialise();
   }
+  @override
+  Stream<List<MessageRoomModel>> get stream =>
+      getIt<MessageRoomService>().getMessageRoomsAsStreamByUserId(auth.uid);
+
 
   @override
   List<MessageRoomModel> transformData(List<MessageRoomModel> rooms) {

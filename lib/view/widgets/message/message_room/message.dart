@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glowing_front/core/models/message_room_model.dart';
 import 'package:glowing_front/core/models/user_model.dart';
-import 'package:stacked/stacked.dart';
-import 'message_view_model.dart';
 
 class Message extends StatelessWidget {
   Message({
@@ -18,30 +16,25 @@ class Message extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<MessageViewModel>.reactive(
-      viewModelBuilder: () => MessageViewModel(),
-      builder: (ctx, model, child) {
-        double screenWidth = MediaQuery.of(context).size.width;
-        double screenHeight = MediaQuery.of(context).size.height;
-        return Row(
-          mainAxisAlignment:
-              isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
-          children: [
-            if (!isMine) _buildAvatar(screenWidth, screenHeight),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
-              child: Column(
-                crossAxisAlignment:
-                    isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                children: [
-                  if (!isMine) _buildNickName(),
-                  _buildTextContainer(screenWidth, context),
-                ],
-              ),
-            ),
-          ],
-        );
-      },
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    return Row(
+      mainAxisAlignment:
+          isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
+      children: [
+        if (!isMine) _buildAvatar(screenWidth, screenHeight),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
+          child: Column(
+            crossAxisAlignment:
+                isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              if (!isMine) _buildNickName(),
+              _buildTextContainer(screenWidth, context),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

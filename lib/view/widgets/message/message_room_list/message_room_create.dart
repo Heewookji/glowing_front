@@ -38,46 +38,51 @@ class MessageRoomCreate extends StatelessWidget {
       builder: (ctx, model, child) {
         ThemeData theme = Theme.of(context);
         Size screenSize = MediaQuery.of(ctx).size;
-        return ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-          child: Container(
-            color: Colors.white,
-            height: screenSize.height * 0.2,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: screenSize.width * 0.05),
-                      width: screenSize.width * 0.55,
-                      child: TextFormField(
-                        controller: model.emailController,
-                        onChanged: model.validateEmail,
+        return SingleChildScrollView(
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+            child: Container(
+              color: Colors.white,
+              padding: EdgeInsets.only(
+                  top: screenSize.height * 0.04,
+                  bottom: MediaQuery.of(ctx).viewInsets.bottom +
+                      (screenSize.height * 0.04)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: screenSize.width * 0.05),
+                        width: screenSize.width * 0.55,
+                        child: TextFormField(
+                          controller: model.emailController,
+                          onChanged: model.validateEmail,
+                        ),
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: screenSize.width * 0.05),
-                      child: FlatButton(
-                        onPressed: !model.isValidEmail
-                            ? null
-                            : () => goMessageRoom(ctx, model),
-                        child: Text('채팅시작'),
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: screenSize.width * 0.05),
+                        child: FlatButton(
+                          onPressed: !model.isValidEmail
+                              ? null
+                              : () => goMessageRoom(ctx, model),
+                          child: Text('채팅시작'),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Text(
-                  model.errorMessage,
-                  style: TextStyle(color: theme.errorColor),
-                ),
-              ],
+                    ],
+                  ),
+                  Text(
+                    model.errorMessage,
+                    style: TextStyle(color: theme.errorColor),
+                  ),
+                ],
+              ),
             ),
           ),
         );

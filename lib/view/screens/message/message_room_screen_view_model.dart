@@ -17,23 +17,25 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
   String roomId;
   String roomName;
   String opponentId;
+  bool notExistRoom;
   TextEditingController textSendBarController = TextEditingController();
 
   MessageRoomScreenViewModel(Map<String, Object> argument) {
     this.roomId = argument['roomId'];
     this.roomName = argument['roomName'];
     this.opponentId = argument['opponentId'];
-  }
-
-  @override
-  Stream<MessageRoomModel> get stream {
-    return getIt<MessageRoomService>().getMessageRoomAsStreamById(roomId);
+    this.notExistRoom = this.roomId == null;
   }
 
   void initialise() {
     //초기 로딩
     setBusy(true);
     super.initialise();
+  }
+
+  @override
+  Stream<MessageRoomModel> get stream {
+    return getIt<MessageRoomService>().getMessageRoomAsStreamById(roomId);
   }
 
   @override
@@ -51,8 +53,8 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
     final text = textSendBarController.text;
     if (text.trim().isEmpty) return;
     final currentTime = Timestamp.now();
-    // 1대 1 메시지룸 개설
-    if (roomId == null) {
+
+    if (notExistRoom) {
       final userIds = [auth.uid, opponentId];
       roomId = await getIt<MessageRoomService>().addMessageRoom(
         room: MessageRoomModel(
@@ -71,6 +73,9 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
     getIt<MessageRoomService>()
         .updateMessageRoom(roomId, {'lastMessagedAt': currentTime});
     textSendBarController.clear();
-    initialise();
+    if (notExistRoom) {
+      notExistRoom = false;
+      initialise();
+    }
   }
 }
