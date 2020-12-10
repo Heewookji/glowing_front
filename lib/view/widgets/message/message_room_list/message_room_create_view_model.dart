@@ -9,26 +9,13 @@ import '../../../../locator.dart';
 
 class MessageRoomCreateViewModel extends BaseViewModel {
   final User auth = getIt<FirebaseAuthService>().user;
+  final Map<String, UserModel> existOpponents;
   TextEditingController emailController = TextEditingController();
   String errorMessage = '';
   bool isValidEmail = false;
-  String existRoomId;
-  UserModel existOpponent;
-
-  final Map<String, UserModel> existOpponents;
   MessageRoomCreateViewModel(this.existOpponents);
 
-  bool isExistOpponent() {
-    for (final opponent in existOpponents.entries)
-      if (emailController.text == opponent.value.email) {
-        existRoomId = opponent.key;
-        existOpponent = opponent.value;
-        return true;
-      }
-    return false;
-  }
-
-  Future<UserModel> findOpponentUser(ctx) async {
+  Future<UserModel> findUser() async {
     UserModel user;
     try {
       user = await getIt<UserService>().getUserByEmail(emailController.text);
@@ -39,6 +26,12 @@ class MessageRoomCreateViewModel extends BaseViewModel {
       notifyListeners();
     }
     return user;
+  }
+
+  MapEntry<String, UserModel> findExistOpponent() {
+    for (final opponent in existOpponents.entries)
+      if (emailController.text == opponent.value.email) return opponent;
+    return null;
   }
 
   void validateEmail(String value) {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:glowing_front/core/models/user_model.dart';
 import 'package:stacked/stacked.dart';
-
-import '../../../../core/models/user_model.dart';
 import '../../../screens/message/message_room_screen.dart';
 import 'message_room_create_view_model.dart';
 
@@ -11,14 +10,15 @@ class MessageRoomCreate extends StatelessWidget {
 
   void goMessageRoom(ctx, MessageRoomCreateViewModel model) async {
     Map<String, Object> arguments;
-    if (model.isExistOpponent()) {
+    final existOpponent = model.findExistOpponent();
+    if (existOpponent != null) {
       arguments = {
-        'roomId': model.existRoomId,
-        'roomName': model.existOpponent.nickName
+        'roomId': existOpponent.key,
+        'roomName': existOpponent.value.nickName,
       };
     } else {
       // 새로운 1대 1 채팅방을 만들 경우
-      final opponentUser = await model.findOpponentUser(ctx);
+      final opponentUser = await model.findUser();
       if (model.hasError) return;
       arguments = {
         'roomName': opponentUser.nickName,

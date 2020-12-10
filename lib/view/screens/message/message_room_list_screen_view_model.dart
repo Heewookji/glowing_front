@@ -14,7 +14,7 @@ class MessageRoomListScreenViewModel
   final User auth = getIt<FirebaseAuthService>().user;
   List<MessageRoomModel> messageRooms;
   Map<String, List<UserModel>> messageRoomUsers = Map();
-  Map<String, UserModel> messageRoomOpponent = Map();
+  Map<String, UserModel> messageRoomOpponents = Map();
 
   @override
   Stream<List<DocumentReference>> get stream =>
@@ -57,10 +57,11 @@ class MessageRoomListScreenViewModel
     } else {
       for (final user in messageRoomUsers[messageRoom.id]) {
         if (user.id != auth.uid) {
-          messageRoomOpponent[messageRoom.id] = user;
+          messageRoomOpponents[messageRoom.id] = user;
           break;
         }
       }
     }
   }
+
 }
