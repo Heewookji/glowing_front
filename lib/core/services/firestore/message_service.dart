@@ -3,22 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:glowing_front/core/models/message_room_model.dart';
 
 class MessageService extends ChangeNotifier {
+  final _db = FirebaseFirestore.instance;
   final _collection = FirebaseFirestore.instance.collection('messageRooms');
 
-  Future addMessage(
+  void addMessage(
     String roomId, {
     @required String userId,
     @required String text,
     @required Timestamp createdAt,
-  }) async {
+  }) {
+    WriteBatch batch = _db.batch();
     final message = MessageModel(
       text: text,
       userId: userId,
       createdAt: createdAt,
     );
-    final result =
-        await _collection.doc(roomId).collection('messages').add(message.toJson());
-    return result;
+    batch.set(
+        _collection.doc(roomId).collection('messages').doc(), message.toJson());
+    batch.update(_collection.doc(roomId), {'lastMessagedAt': createdAt});
+    batch.commit();
   }
 
   Stream<List<MessageModel>> fetchMessagesAsStreamById(String roomId) {

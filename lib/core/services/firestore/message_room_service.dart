@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:glowing_front/core/models/message_room_model.dart';
 
 class MessageRoomService extends ChangeNotifier {
+  final _db = FirebaseFirestore.instance;
   final _collection = FirebaseFirestore.instance.collection('messageRooms');
 
   Stream<MessageRoomModel> getMessageRoomAsStreamById(String roomId) {
@@ -32,9 +33,5 @@ class MessageRoomService extends ChangeNotifier {
       ref = await _collection.add(messageRoom.toJson());
     }
     return ref.id;
-  }
-
-  Future<void> updateMessageRoom(String roomId, Map<String, dynamic> map) async {
-    await _collection.doc(roomId).update(map);
   }
 }

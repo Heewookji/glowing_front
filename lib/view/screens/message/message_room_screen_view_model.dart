@@ -70,8 +70,7 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
       text: text,
       createdAt: currentTime,
     );
-    getIt<MessageRoomService>()
-        .updateMessageRoom(roomId, {'lastMessagedAt': currentTime});
+    
     textSendBarController.clear();
     if (notExistRoom) {
       notExistRoom = false;

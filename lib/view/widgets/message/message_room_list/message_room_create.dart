@@ -8,7 +8,7 @@ class MessageRoomCreate extends StatelessWidget {
   final Map<String, UserModel> existOpponents;
   MessageRoomCreate(this.existOpponents);
 
-  void goMessageRoom(ctx, MessageRoomCreateViewModel model) async {
+  void navigateMessageRoom(ctx, MessageRoomCreateViewModel model) async {
     Map<String, Object> arguments;
     final existOpponent = model.findExistOpponent();
     if (existOpponent != null) {
@@ -71,15 +71,19 @@ class MessageRoomCreate extends StatelessWidget {
                         child: FlatButton(
                           onPressed: !model.isValidEmail
                               ? null
-                              : () => goMessageRoom(ctx, model),
+                              : () => navigateMessageRoom(ctx, model),
                           child: Text('채팅시작'),
                         ),
                       ),
                     ],
                   ),
-                  Text(
-                    model.errorMessage,
-                    style: TextStyle(color: theme.errorColor),
+                  Container(
+                    height: screenSize.height * 0.05,
+                    alignment: Alignment.center,
+                    child: Text(
+                      model.errorMessage,
+                      style: TextStyle(color: theme.errorColor),
+                    ),
                   ),
                 ],
               ),

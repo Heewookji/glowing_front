@@ -4,6 +4,7 @@ import 'package:glowing_front/core/exceptions/user_exception.dart';
 import '../../models/user_model.dart';
 
 class UserService extends ChangeNotifier {
+  final _db = FirebaseFirestore.instance;
   final _collection = FirebaseFirestore.instance.collection('users');
 
   Future<List<UserModel>> getUsersByIds(List<String> ids) async {
@@ -16,7 +17,8 @@ class UserService extends ChangeNotifier {
   }
 
   Future<UserModel> getUserByEmail(String email) async {
-    final snapshot = await _collection.limit(1).where('email', isEqualTo: email).get();
+    final snapshot =
+        await _collection.limit(1).where('email', isEqualTo: email).get();
     if (snapshot.docs.length == 0)
       throw UserException(
           code: UserExceptionCode.NoData, message: '해당 이메일을 가진 유저가 없습니다');
