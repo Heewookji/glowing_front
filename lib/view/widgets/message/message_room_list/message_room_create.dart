@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glowing_front/core/models/user_model.dart';
+import 'package:glowing_front/view/widgets/common/indicator/space_indicator.dart';
 import 'package:stacked/stacked.dart';
 import '../../../screens/message/message_room_screen.dart';
 import 'message_room_create_view_model.dart';
@@ -69,10 +70,13 @@ class MessageRoomCreate extends StatelessWidget {
                         margin: EdgeInsets.symmetric(
                             horizontal: screenSize.width * 0.05),
                         child: FlatButton(
-                          onPressed: !model.isValidEmail
+                          splashColor: Colors.transparent,
+                          onPressed: !model.isValidEmail || model.isBusy
                               ? null
                               : () => navigateMessageRoom(ctx, model),
-                          child: Text('채팅시작'),
+                          child: model.isBusy
+                              ? SpaceIndicator(color: theme.accentColor)
+                              : Text('채팅시작'),
                         ),
                       ),
                     ],

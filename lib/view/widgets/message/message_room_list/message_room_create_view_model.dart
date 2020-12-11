@@ -18,13 +18,15 @@ class MessageRoomCreateViewModel extends BaseViewModel {
   Future<UserModel> findUser() async {
     UserModel user;
     try {
+      setBusy(true);
       user = await getIt<UserService>().getUserByEmail(emailController.text);
       clearErrors();
     } on UserException catch (e) {
       errorMessage = e.message;
       setError(true);
-      notifyListeners();
+      setBusy(false);
     }
+    setBusy(false);
     return user;
   }
 
