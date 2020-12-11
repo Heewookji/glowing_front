@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:glowing_front/core/models/message_room_model.dart';
 import 'package:glowing_front/core/models/user_model.dart';
 import 'package:glowing_front/view/widgets/message/message_room_list/message_room_create.dart';
+import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../view/screens/message/message_room_screen.dart';
@@ -48,9 +50,7 @@ class MessageRoomListScreen extends StatelessWidget {
           ),
           floatingActionButton: IconButton(
             icon: Icon(Icons.play_arrow),
-            onPressed: () {
-              
-            },
+            onPressed: () {},
           ),
           body: model.isBusy
               ? Center(
@@ -63,7 +63,7 @@ class MessageRoomListScreen extends StatelessWidget {
                   itemBuilder: (_, index) {
                     final messageRoom = model.data[index];
                     final opponent = model.messageRoomOpponents[messageRoom.id];
-                    if (model.busy(messageRoom)) return null;
+                    if (model.busy(messageRoom)) return Container();
                     return GestureDetector(
                       onTap: () => _navigateMessageRoom(
                         context,
@@ -71,7 +71,8 @@ class MessageRoomListScreen extends StatelessWidget {
                         opponent.nickName,
                       ),
                       child: Card(
-                        child: _buildRow(opponent, screenSize, theme),
+                        child:
+                            _buildRow(messageRoom, opponent, screenSize, theme),
                       ),
                     );
                   },
@@ -81,7 +82,8 @@ class MessageRoomListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRow(UserModel opponent, Size screenSize, ThemeData theme) {
+  Widget _buildRow(MessageRoomModel messageRoom, UserModel opponent,
+      Size screenSize, ThemeData theme) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: screenSize.height * 0.01),
       child: Row(
@@ -90,7 +92,8 @@ class MessageRoomListScreen extends StatelessWidget {
           CircleAvatar(
             backgroundImage: NetworkImage(opponent.imageUrl),
           ),
-          Text(opponent.nickName)
+          Text(opponent.nickName),
+          Text(DateFormat.Hm().format(messageRoom.lastMessagedAt.toDate())),
         ],
       ),
     );

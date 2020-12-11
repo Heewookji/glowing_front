@@ -14,7 +14,11 @@ class MessageRoomService extends ChangeNotifier {
 
   Stream<List<MessageRoomModel>> getMessageRoomsAsStreamByUserId(
       String userId) {
-    return _collection.where('users', arrayContains: userId).snapshots().map(
+    return _collection
+        .where('users', arrayContains: userId)
+        .orderBy('lastMessagedAt', descending: true)
+        .snapshots()
+        .map(
           (snapshot) => snapshot.docs
               .map((doc) => MessageRoomModel.fromMap(doc.data(), doc.id))
               .toList(),

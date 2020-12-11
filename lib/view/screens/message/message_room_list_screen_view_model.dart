@@ -11,8 +11,8 @@ import '../../../locator.dart';
 class MessageRoomListScreenViewModel
     extends StreamViewModel<List<MessageRoomModel>> {
   final User auth = getIt<FirebaseAuthService>().user;
-  Map<String, List<UserModel>> messageRoomUsers;
-  Map<String, UserModel> messageRoomOpponents;
+  Map<String, List<UserModel>> messageRoomUsers = Map();
+  Map<String, UserModel> messageRoomOpponents = Map();
 
   @override
   void initialise() {
@@ -20,15 +20,13 @@ class MessageRoomListScreenViewModel
     setBusy(true);
     super.initialise();
   }
+
   @override
   Stream<List<MessageRoomModel>> get stream =>
       getIt<MessageRoomService>().getMessageRoomsAsStreamByUserId(auth.uid);
 
-
   @override
   List<MessageRoomModel> transformData(List<MessageRoomModel> rooms) {
-    messageRoomUsers = Map();
-    messageRoomOpponents = Map();
     getUsers(rooms).then((value) {
       if (isBusy) setBusy(false);
     });
@@ -41,18 +39,18 @@ class MessageRoomListScreenViewModel
         setBusyForObject(room, true);
       messageRoomUsers[room.id] =
           await getIt<UserService>().getUsersByIds(room.users);
-      setOpponent(room);
+      await setOpponent(room);
       setBusyForObject(room, false);
     }
   }
 
-  void setOpponent(MessageRoomModel messageRoom) {
-    if (messageRoom.isGroup) {
+  Future<void> setOpponent(MessageRoomModel room) async {
+    if (room.isGroup) {
       //group 톡 일경우
     } else {
-      for (final user in messageRoomUsers[messageRoom.id]) {
+      for (final user in messageRoomUsers[room.id]) {
         if (user.id != auth.uid) {
-          messageRoomOpponents[messageRoom.id] = user;
+          messageRoomOpponents[room.id] = user;
           break;
         }
       }
