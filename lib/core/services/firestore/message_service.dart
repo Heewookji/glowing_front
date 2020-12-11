@@ -6,21 +6,12 @@ class MessageService extends ChangeNotifier {
   final _db = FirebaseFirestore.instance;
   final _collection = FirebaseFirestore.instance.collection('messageRooms');
 
-  void addMessage(
-    String roomId, {
-    @required String userId,
-    @required String text,
-    @required Timestamp createdAt,
-  }) {
+  void addMessage(String roomId, MessageModel message) {
     WriteBatch batch = _db.batch();
-    final message = MessageModel(
-      text: text,
-      userId: userId,
-      createdAt: createdAt,
-    );
     batch.set(
         _collection.doc(roomId).collection('messages').doc(), message.toJson());
-    batch.update(_collection.doc(roomId), {'lastMessagedAt': createdAt});
+    batch
+        .update(_collection.doc(roomId), {'lastMessagedAt': message.createdAt});
     batch.commit();
   }
 

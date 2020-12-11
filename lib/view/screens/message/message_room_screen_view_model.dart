@@ -66,11 +66,12 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
     }
     getIt<MessageService>().addMessage(
       roomId,
-      userId: auth.uid,
-      text: text,
-      createdAt: currentTime,
+      MessageModel(
+        userId: auth.uid,
+        text: text,
+        createdAt: currentTime,
+      ),
     );
-    
     textSendBarController.clear();
     if (notExistRoom) {
       notExistRoom = false;

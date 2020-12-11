@@ -25,12 +25,7 @@ class MessageRoomService extends ChangeNotifier {
     DocumentReference ref;
     if (room.isGroup) {
     } else {
-      final messageRoom = MessageRoomModel(
-        isGroup: false,
-        users: room.users,
-        lastMessagedAt: room.lastMessagedAt,
-      );
-      ref = await _collection.add(messageRoom.toJson());
+      ref = await _collection.add(room.toJson());
     }
     return ref.id;
   }
