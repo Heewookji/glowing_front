@@ -24,11 +24,21 @@ class Messages extends StatelessWidget {
                 itemCount: model.data.length,
                 itemBuilder: (ctx, index) {
                   final message = model.data[index];
-                  return Message(
-                    message: message,
-                    isMine: model.auth.uid == message.userId,
-                    userInfo: model.userMap[message.userId],
-                    key: ValueKey(message.id),
+                  bool printDivider = false;
+                  if (message.createdAt.toDate().day != DateTime.now().day &&
+                      true) {
+                    printDivider = true;
+                  }
+                  return Column(
+                    children: [
+                      if (printDivider) Divider(),
+                      Message(
+                        message: message,
+                        isMine: model.auth.uid == message.userId,
+                        userInfo: model.userMap[message.userId],
+                        key: ValueKey(message.id),
+                      ),
+                    ],
                   );
                 },
               );
