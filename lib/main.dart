@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glowing_front/core/services/auth/firebase_auth_service.dart';
 import 'package:glowing_front/view/themes/root_theme_builder.dart';
+import 'package:intl/intl.dart';
+
 import 'locator.dart';
 import 'view/router.dart' as router;
 import 'view/screens/auth/auth_screen.dart';
@@ -17,11 +19,12 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]);
   setupLocator();
+  Intl.defaultLocale = 'ko_KR';
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  @override 
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Glowing',
