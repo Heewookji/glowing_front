@@ -60,6 +60,7 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
         room: MessageRoomModel(
           isGroup: false,
           lastMessagedAt: currentTime,
+          lastMessagedText: '',
           users: userIds,
         ),
       );

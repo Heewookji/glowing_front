@@ -34,12 +34,14 @@ class MessageRoomModel {
   final String id;
   final bool isGroup;
   final Timestamp lastMessagedAt;
+  final String lastMessagedText;
   final List<String> users;
 
   MessageRoomModel({
     this.id,
     @required this.isGroup,
     @required this.lastMessagedAt,
+    @required this.lastMessagedText,
     @required this.users,
   });
 
@@ -49,6 +51,7 @@ class MessageRoomModel {
       isGroup: json['isGroup'] ?? false,
       lastMessagedAt:
           json['lastMessagedAt'] ?? Timestamp.fromDate(DateTime(1900)),
+      lastMessagedText: json['lastMessagedText'] ?? '',
       users: json['users'] == null
           ? List()
           : ConvertHelper.dynamicToStringList(json['users']),
@@ -60,6 +63,7 @@ class MessageRoomModel {
       'isGroup': isGroup,
       'users': users,
       'lastMessagedAt': lastMessagedAt,
+      'lastMessagedText': lastMessagedText,
     };
   }
 }

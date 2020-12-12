@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:glowing_front/locator.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../../core/models/user_model.dart';
 import '../../../core/services/auth/firebase_auth_service.dart';
-import '../../../core/services/firestore/user_service.dart';
 import '../../widgets/auth/logo_auth_form.dart';
 
 class AuthScreen extends StatefulWidget {

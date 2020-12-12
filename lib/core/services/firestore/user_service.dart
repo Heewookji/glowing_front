@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:glowing_front/core/exceptions/user_exception.dart';
+
 import '../../models/user_model.dart';
 
 class UserService extends ChangeNotifier {
-  final _db = FirebaseFirestore.instance;
   final _collection = FirebaseFirestore.instance.collection('users');
 
   Future<List<UserModel>> getUsersByIds(List<String> ids) async {

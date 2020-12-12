@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:glowing_front/core/models/message_room_model.dart';
 
 class MessageRoomService extends ChangeNotifier {
-  final _db = FirebaseFirestore.instance;
   final _collection = FirebaseFirestore.instance.collection('messageRooms');
 
   Stream<MessageRoomModel> getMessageRoomAsStreamById(String roomId) {

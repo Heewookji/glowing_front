@@ -92,7 +92,23 @@ class MessageRoomListScreen extends StatelessWidget {
           CircleAvatar(
             backgroundImage: NetworkImage(opponent.imageUrl),
           ),
-          Text(opponent.nickName),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                opponent.nickName,
+                style: theme.textTheme.bodyText1,
+              ),
+              Container(
+                padding: EdgeInsets.only(top: screenSize.height * 0.005),
+                width: screenSize.width * 0.55,
+                child: Text(
+                  messageRoom.lastMessagedText,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
           Text(DateFormat.Hm().format(messageRoom.lastMessagedAt.toDate())),
         ],
       ),

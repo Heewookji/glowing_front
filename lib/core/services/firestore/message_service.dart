@@ -10,8 +10,10 @@ class MessageService extends ChangeNotifier {
     WriteBatch batch = _db.batch();
     batch.set(
         _collection.doc(roomId).collection('messages').doc(), message.toJson());
-    batch
-        .update(_collection.doc(roomId), {'lastMessagedAt': message.createdAt});
+    batch.update(_collection.doc(roomId), {
+      'lastMessagedAt': message.createdAt,
+      'lastMessagedText': message.text,
+    });
     batch.commit();
   }
 
