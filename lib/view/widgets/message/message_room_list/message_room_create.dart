@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glowing_front/core/models/user_model.dart';
 import 'package:glowing_front/view/widgets/common/indicator/space_indicator.dart';
 import 'package:stacked/stacked.dart';
+
 import '../../../screens/message/message_room_screen.dart';
 import 'message_room_create_view_model.dart';
 
@@ -11,6 +12,7 @@ class MessageRoomCreate extends StatelessWidget {
 
   void navigateMessageRoom(ctx, MessageRoomCreateViewModel model) async {
     Map<String, Object> arguments;
+
     final existOpponent = model.findExistOpponent();
     if (existOpponent != null) {
       arguments = {

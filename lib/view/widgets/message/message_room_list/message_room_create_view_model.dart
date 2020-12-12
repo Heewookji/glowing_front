@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+
 import '../../../../core/exceptions/user_exception.dart';
 import '../../../../core/models/user_model.dart';
 import '../../../../core/services/auth/firebase_auth_service.dart';
@@ -17,6 +18,11 @@ class MessageRoomCreateViewModel extends BaseViewModel {
 
   Future<UserModel> findUser() async {
     UserModel user;
+    if (emailController.text == auth.email) {
+      errorMessage = '자기 자신과는 채팅할 수 없습니다';
+      setError(true);
+      return user;
+    }
     try {
       setBusy(true);
       user = await getIt<UserService>().getUserByEmail(emailController.text);
