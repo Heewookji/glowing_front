@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:glowing_front/core/models/message_room_model.dart';
+import 'package:glowing_front/core/models/message_model.dart';
 
 class MessageService extends ChangeNotifier {
   final _db = FirebaseFirestore.instance;

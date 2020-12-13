@@ -38,7 +38,7 @@ class MessageRoomListScreenViewModel
       if (!messageRoomOpponents.containsKey(room.id))
         setBusyForObject(room, true);
       messageRoomUsers[room.id] =
-          await getIt<UserService>().getUsersByIds(room.users);
+          await getIt<UserService>().getUsersByIds(room.userIds);
       await setOpponent(room);
       setBusyForObject(room, false);
     }

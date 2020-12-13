@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:glowing_front/core/models/message_model.dart';
 import 'package:glowing_front/core/models/message_room_model.dart';
 import 'package:glowing_front/core/models/user_model.dart';
 import 'package:glowing_front/core/services/firestore/message_room_service.dart';
@@ -41,7 +42,7 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
   @override
   MessageRoomModel transformData(MessageRoomModel messageRoomModel) {
     getIt<UserService>()
-        .getUsersByIds(messageRoomModel.users)
+        .getUsersByIds(messageRoomModel.userIds)
         .then((newUserModels) {
       users = newUserModels;
       setBusy(false);
@@ -55,13 +56,19 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
     final currentTime = Timestamp.now();
 
     if (notExistRoom) {
-      final userIds = [auth.uid, opponentId];
+      final userInfos = {
+        auth.uid: MessageRoomUserInfoModel(lastViewedAt: Timestamp.now()),
+        opponentId: MessageRoomUserInfoModel(
+          lastViewedAt: null,
+        ),
+      };
       roomId = await getIt<MessageRoomService>().addMessageRoom(
         room: MessageRoomModel(
           isGroup: false,
           lastMessagedAt: currentTime,
           lastMessagedText: '',
-          users: userIds,
+          userIds: [auth.uid, opponentId],
+          userInfos: userInfos,
         ),
       );
     }

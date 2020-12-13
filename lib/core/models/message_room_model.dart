@@ -1,48 +1,45 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:glowing_front/core/models/model.dart';
 import 'package:glowing_front/core/utils/convert_helper.dart';
 
-class MessageModel {
-  final String id;
-  final String text;
+class MessageRoomUserInfoModel implements Model {
   final String userId;
-  final Timestamp createdAt;
+  final Timestamp lastViewedAt;
 
-  MessageModel({
-    this.id,
-    @required this.text,
-    @required this.userId,
-    @required this.createdAt,
+  MessageRoomUserInfoModel({
+    this.userId,
+    @required this.lastViewedAt,
   });
 
-  MessageModel.fromMap(Map json, String id)
-      : id = id ?? '',
-        text = json['text'] ?? '',
-        userId = json['userId'],
-        createdAt = json['createdAt'] ?? Timestamp.fromDate(DateTime(9999));
-
+  factory MessageRoomUserInfoModel.fromMap(Map json, String id) {
+    return MessageRoomUserInfoModel(
+      userId: id ?? '',
+      lastViewedAt: json['lastViewedAt'] ?? null,
+    );
+  }
   toJson() {
     return {
-      'text': text,
-      'userId': userId,
-      'createdAt': createdAt,
+      'lastViewedAt': lastViewedAt,
     };
   }
 }
 
-class MessageRoomModel {
+class MessageRoomModel implements Model {
   final String id;
   final bool isGroup;
   final Timestamp lastMessagedAt;
   final String lastMessagedText;
-  final List<String> users;
+  final List<String> userIds;
+  final Map<String, MessageRoomUserInfoModel> userInfos;
 
   MessageRoomModel({
     this.id,
     @required this.isGroup,
     @required this.lastMessagedAt,
     @required this.lastMessagedText,
-    @required this.users,
+    @required this.userIds,
+    @required this.userInfos,
   });
 
   factory MessageRoomModel.fromMap(Map json, String id) {
@@ -52,16 +49,23 @@ class MessageRoomModel {
       lastMessagedAt:
           json['lastMessagedAt'] ?? Timestamp.fromDate(DateTime(1900)),
       lastMessagedText: json['lastMessagedText'] ?? '',
-      users: json['users'] == null
+      userIds: json['userIds'] == null
           ? List()
-          : ConvertHelper.dynamicToStringList(json['users']),
+          : ConvertHelper.mapToStringList(json['userIds']),
+      userInfos: json['userInfos'] == null
+          ? Map()
+          : ConvertHelper.mapToIdModelMap<MessageRoomUserInfoModel>(
+              json['userInfos'],
+            ),
     );
   }
 
   toJson() {
     return {
       'isGroup': isGroup,
-      'users': users,
+      'userIds': userIds,
+      'userInfos':
+          ConvertHelper.idModelMapToJson<MessageRoomUserInfoModel>(userInfos),
       'lastMessagedAt': lastMessagedAt,
       'lastMessagedText': lastMessagedText,
     };

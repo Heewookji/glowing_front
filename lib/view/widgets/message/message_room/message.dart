@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:glowing_front/core/models/message_room_model.dart';
+import 'package:glowing_front/core/models/message_model.dart';
 import 'package:glowing_front/core/models/user_model.dart';
 import 'package:intl/intl.dart';
 

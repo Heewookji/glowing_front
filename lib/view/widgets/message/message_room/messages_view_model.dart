@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:glowing_front/core/models/message_model.dart';
 import 'package:glowing_front/core/models/user_model.dart';
 import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
-import '../../../../core/models/message_room_model.dart';
 import '../../../../core/services/auth/firebase_auth_service.dart';
 import '../../../../core/services/firestore/message_service.dart';
 import '../../../../locator.dart';
