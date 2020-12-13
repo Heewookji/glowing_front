@@ -30,14 +30,10 @@ class MessagesViewModel extends StreamViewModel<List<MessageModel>> {
     for (int i = 0; i < messages.length; i++) {
       final message = messages[i];
       final ymd = DateFormat.yMd().format(message.createdAt.toDate());
-      if (message.createdAt.toDate().day != DateTime.now().day &&
-          !dateDividerMap.containsKey(ymd)) {
+      if (!dateDividerMap.containsKey(ymd) &&
+          message.createdAt.toDate().day != DateTime.now().day) {
         dateDividerMap[ymd] = true;
-        printList.add(
-          message.createdAt.toDate().add(
-                Duration(days: 1),
-              ),
-        );
+        if (i != 0) printList.add(messages[i - 1].createdAt.toDate());
       }
       printList.add(message);
     }
