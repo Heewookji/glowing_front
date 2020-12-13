@@ -35,6 +35,18 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
   }
 
   @override
+  void dispose() {
+    getIt<MessageRoomService>().updateUserInfo(
+      roomId,
+      MessageRoomUserInfoModel(
+        userId: auth.uid,
+        lastViewedAt: Timestamp.now(),
+      ),
+    );
+    super.dispose();
+  }
+  
+  @override
   Stream<MessageRoomModel> get stream {
     return getIt<MessageRoomService>().getMessageRoomAsStreamById(roomId);
   }
@@ -58,12 +70,10 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
     if (notExistRoom) {
       final userInfos = {
         auth.uid: MessageRoomUserInfoModel(lastViewedAt: Timestamp.now()),
-        opponentId: MessageRoomUserInfoModel(
-          lastViewedAt: null,
-        ),
+        opponentId: MessageRoomUserInfoModel(lastViewedAt: null),
       };
       roomId = await getIt<MessageRoomService>().addMessageRoom(
-        room: MessageRoomModel(
+        MessageRoomModel(
           isGroup: false,
           lastMessagedAt: currentTime,
           lastMessagedText: '',

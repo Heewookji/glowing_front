@@ -21,7 +21,7 @@ class MessagesViewModel extends StreamViewModel<List<MessageModel>> {
   }
   @override
   Stream<List<MessageModel>> get stream =>
-      getIt<MessageService>().fetchMessagesAsStreamById(roomId);
+      getIt<MessageService>().getMessagesAsStreamById(roomId);
 
   @override
   List<MessageModel> transformData(List<MessageModel> messages) {

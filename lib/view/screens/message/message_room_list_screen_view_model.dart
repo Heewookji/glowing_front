@@ -13,6 +13,7 @@ class MessageRoomListScreenViewModel
   final User auth = getIt<FirebaseAuthService>().user;
   Map<String, List<UserModel>> messageRoomUsers = Map();
   Map<String, UserModel> messageRoomOpponents = Map();
+  Map<String, bool> messageRoomUnread = Map();
 
   @override
   void initialise() {
@@ -27,18 +28,23 @@ class MessageRoomListScreenViewModel
 
   @override
   List<MessageRoomModel> transformData(List<MessageRoomModel> rooms) {
-    getUsers(rooms).then((value) {
+    getUsersAndUnread(rooms).then((value) {
       if (isBusy) setBusy(false);
     });
     return super.transformData(rooms);
   }
 
-  Future<void> getUsers(List<MessageRoomModel> rooms) async {
+  Future<void> getUsersAndUnread(List<MessageRoomModel> rooms) async {
     for (final room in rooms) {
       if (!messageRoomOpponents.containsKey(room.id))
         setBusyForObject(room, true);
       messageRoomUsers[room.id] =
           await getIt<UserService>().getUsersByIds(room.userIds);
+      messageRoomUnread[room.id] =
+          room.userInfos[auth.uid].lastViewedAt == null ||
+              room.lastMessagedAt
+                  .toDate()
+                  .isAfter(room.userInfos[auth.uid].lastViewedAt.toDate());
       await setOpponent(room);
       setBusyForObject(room, false);
     }
@@ -56,4 +62,5 @@ class MessageRoomListScreenViewModel
       }
     }
   }
+
 }

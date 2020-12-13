@@ -14,6 +14,7 @@ class MessageRoomListScreen extends StatelessWidget {
 
   void _navigateMessageRoom(
     BuildContext context,
+    MessageRoomListScreenViewModel model,
     String roomId,
     String roomName,
   ) {
@@ -63,16 +64,18 @@ class MessageRoomListScreen extends StatelessWidget {
                   itemBuilder: (_, index) {
                     final messageRoom = model.data[index];
                     final opponent = model.messageRoomOpponents[messageRoom.id];
+                    final isUnread = model.messageRoomUnread[messageRoom.id];
                     if (model.busy(messageRoom)) return Container();
                     return GestureDetector(
                       onTap: () => _navigateMessageRoom(
                         context,
+                        model,
                         messageRoom.id,
                         opponent.nickName,
                       ),
                       child: Card(
-                        child:
-                            _buildRow(messageRoom, opponent, screenSize, theme),
+                        child: _buildRow(
+                            messageRoom, opponent, isUnread, screenSize, theme),
                       ),
                     );
                   },
@@ -83,7 +86,7 @@ class MessageRoomListScreen extends StatelessWidget {
   }
 
   Widget _buildRow(MessageRoomModel messageRoom, UserModel opponent,
-      Size screenSize, ThemeData theme) {
+      bool isUnread, Size screenSize, ThemeData theme) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: screenSize.height * 0.01),
       child: Row(
@@ -109,7 +112,15 @@ class MessageRoomListScreen extends StatelessWidget {
               ),
             ],
           ),
-          Text(DateFormat.Hm().format(messageRoom.lastMessagedAt.toDate())),
+          Column(children: [
+            Text(DateFormat.Hm().format(messageRoom.lastMessagedAt.toDate())),
+            SizedBox(
+              height: screenSize.height * 0.03,
+              child: isUnread
+                  ? Icon(Icons.circle, color: theme.accentColor, size: 10)
+                  : null,
+            ),
+          ]),
         ],
       ),
     );

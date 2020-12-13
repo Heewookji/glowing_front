@@ -22,12 +22,19 @@ class MessageRoomService extends ChangeNotifier {
             .toList());
   }
 
-  Future<String> addMessageRoom({@required MessageRoomModel room}) async {
+  Future<String> addMessageRoom(MessageRoomModel room) async {
     DocumentReference ref;
     if (room.isGroup) {
     } else {
       ref = await _collection.add(room.toJson());
     }
     return ref.id;
+  }
+
+  Future<void> updateUserInfo(
+      String roomId, MessageRoomUserInfoModel userInfo) async {
+    await _collection.doc(roomId).update({
+      'userInfos.${userInfo.userId}': userInfo.toJson(),
+    });
   }
 }

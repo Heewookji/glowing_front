@@ -17,7 +17,7 @@ class MessageService extends ChangeNotifier {
     batch.commit();
   }
 
-  Stream<List<MessageModel>> fetchMessagesAsStreamById(String roomId) {
+  Stream<List<MessageModel>> getMessagesAsStreamById(String roomId) {
     return _collection
         .doc(roomId)
         .collection('messages')
@@ -29,4 +29,5 @@ class MessageService extends ChangeNotifier {
           .toList();
     });
   }
+
 }
