@@ -13,6 +13,7 @@ class MessageSendBar extends ViewModelWidget<MessageRoomScreenViewModel> {
           children: [
             Expanded(
               child: TextField(
+                autocorrect: false,
                 controller: parentModel.textSendBarController,
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 15),
