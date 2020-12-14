@@ -21,22 +21,9 @@ class MessagesViewModel extends StreamViewModel<List<MessageModel>> {
   MessagesViewModel(this.roomId, List<UserModel> userModels) {
     userMap = Map();
     userModels.forEach((user) => userMap[user.id] = user);
-    scrollController.addListener(() {
-      if (scrollController.position.atEdge &&
-          !isFetching &&
-          scrollController.position.pixels != 0) {
-        isFetching = true;
-        notifyListeners();
-        getIt<MessageService>().getPageMessagesByRoomId(roomId).then(
-          (messages) {
-            isFetching = false;
-            printList.addAll(messages);
-            notifyListeners();
-          },
-        );
-      }
-    });
+    scrollController.addListener(_scrollListener);
   }
+
   @override
   Stream<List<MessageModel>> get stream =>
       getIt<MessageService>().getPageMessagesAsStreamByRoomId(roomId);
@@ -44,17 +31,38 @@ class MessagesViewModel extends StreamViewModel<List<MessageModel>> {
   @override
   List<MessageModel> transformData(List<MessageModel> messages) {
     dateDividerMap = Map();
-    printList = List();
+    printList = _buildPrintList(messages);
+    return messages;
+  }
+
+  List<Object> _buildPrintList(List<MessageModel> messages) {
+    List ret = List();
     for (int i = 0; i < messages.length; i++) {
       final message = messages[i];
       final ymd = DateFormat.yMd().format(message.createdAt.toDate());
       if (!dateDividerMap.containsKey(ymd) &&
           message.createdAt.toDate().day != DateTime.now().day) {
         dateDividerMap[ymd] = true;
-        if (i != 0) printList.add(messages[i - 1].createdAt.toDate());
+        if (i != 0) ret.add(messages[i - 1].createdAt.toDate());
       }
-      printList.add(message);
+      ret.add(message);
     }
-    return messages;
+    return ret;
+  }
+
+  void _scrollListener() {
+    if (scrollController.position.atEdge &&
+        !isFetching &&
+        scrollController.position.pixels != 0) {
+      isFetching = true;
+      notifyListeners();
+      getIt<MessageService>().getPageMessagesByRoomId(roomId).then(
+        (messages) {
+          isFetching = false;
+          printList.addAll(_buildPrintList(messages));
+          notifyListeners();
+        },
+      );
+    }
   }
 }
