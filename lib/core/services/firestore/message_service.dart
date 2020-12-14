@@ -5,7 +5,7 @@ import 'package:glowing_front/core/models/message_model.dart';
 class MessageService extends ChangeNotifier {
   final _db = FirebaseFirestore.instance;
   final _collection = FirebaseFirestore.instance.collection('messageRooms');
-  final int pageCount = 7;
+  final int pageCount = 20;
   DocumentSnapshot lastDocumentOfPage;
 
   void addMessage(String roomId, MessageModel message) {
@@ -36,6 +36,7 @@ class MessageService extends ChangeNotifier {
   }
 
   Future<List<MessageModel>> getPageMessagesByRoomId(String roomId) async {
+    print('fetch');
     final snapshot = await _collection
         .doc(roomId)
         .collection('messages')

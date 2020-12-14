@@ -24,6 +24,7 @@ class Messages extends StatelessWidget {
                 child: SpaceIndicator(color: Theme.of(context).accentColor),
               )
             : ListView.builder(
+                physics: BouncingScrollPhysics(),
                 reverse: true,
                 itemCount: model.printList.length,
                 controller: model.scrollController,
@@ -40,7 +41,7 @@ class Messages extends StatelessWidget {
                       index == model.printList.length - 1
                           ? Container(
                               margin: EdgeInsets.symmetric(
-                                  vertical: screenSize.height * 0.03),
+                                  vertical: screenSize.height * 0.04),
                               child: model.isFetching
                                   ? SpaceIndicator(color: theme.accentColor)
                                   : null,

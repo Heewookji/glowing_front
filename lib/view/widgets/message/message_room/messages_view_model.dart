@@ -53,7 +53,7 @@ class MessagesViewModel extends StreamViewModel<List<MessageModel>> {
   void _scrollListener() {
     if (scrollController.position.atEdge &&
         !isFetching &&
-        scrollController.position.pixels != 0) {
+        scrollController.position.pixels > 0) {
       isFetching = true;
       notifyListeners();
       getIt<MessageService>().getPageMessagesByRoomId(roomId).then(
