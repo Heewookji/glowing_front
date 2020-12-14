@@ -61,7 +61,6 @@ class Message extends StatelessWidget {
           if (isMine)
             _buildTimeText(message.createdAt.toDate(), theme.textTheme.caption),
           Container(
-            width: screenWidth * 0.35,
             decoration: BoxDecoration(
               color: !isMine ? theme.backgroundColor : theme.accentColor,
               borderRadius: BorderRadius.only(
@@ -73,19 +72,15 @@ class Message extends StatelessWidget {
             ),
             padding: EdgeInsets.symmetric(
               vertical: 10,
-              horizontal: 16,
+              horizontal: 15,
             ),
             margin: EdgeInsets.only(
                 left: !isMine ? 0 : screenWidth * 0.01,
                 right: isMine ? 0 : screenWidth * 0.01),
+            width: message.text.length > 14 ? screenWidth * 0.4 : null,
             child: Text(
               message.text,
-              style: TextStyle(
-                color: isMine
-                    ? Colors.black
-                    : theme.accentTextTheme.headline6.color,
-              ),
-              textAlign: isMine ? TextAlign.end : TextAlign.start,
+              style: theme.textTheme.bodyText2,
             ),
           ),
           if (!isMine)
