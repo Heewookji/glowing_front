@@ -26,6 +26,7 @@ class Messages extends StatelessWidget {
             : ListView.builder(
                 reverse: true,
                 itemCount: model.printList.length,
+                controller: model.scrollController,
                 itemBuilder: (ctx, index) {
                   final printObject = model.printList[index];
                   if (printObject is DateTime) {
@@ -36,6 +37,15 @@ class Messages extends StatelessWidget {
                   MessageModel message = printObject;
                   return Column(
                     children: [
+                      index == model.printList.length - 1
+                          ? Container(
+                              margin: EdgeInsets.symmetric(
+                                  vertical: screenSize.height * 0.03),
+                              child: model.isFetching
+                                  ? SpaceIndicator(color: theme.accentColor)
+                                  : null,
+                            )
+                          : Container(),
                       Message(
                         message: message,
                         isMine: model.auth.uid == message.userId,

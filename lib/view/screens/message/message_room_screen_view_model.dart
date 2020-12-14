@@ -45,7 +45,7 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
     );
     super.dispose();
   }
-  
+
   @override
   Stream<MessageRoomModel> get stream {
     return getIt<MessageRoomService>().getMessageRoomAsStreamById(roomId);
