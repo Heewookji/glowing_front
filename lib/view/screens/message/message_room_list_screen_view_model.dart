@@ -28,29 +28,25 @@ class MessageRoomListScreenViewModel
 
   @override
   List<MessageRoomModel> transformData(List<MessageRoomModel> rooms) {
-    getUsersAndUnread(rooms).then((value) {
+    setUsersOpponentsUnread(rooms).then((value) {
       if (isBusy) setBusy(false);
     });
     return super.transformData(rooms);
   }
 
-  Future<void> getUsersAndUnread(List<MessageRoomModel> rooms) async {
+  Future<void> setUsersOpponentsUnread(List<MessageRoomModel> rooms) async {
     for (final room in rooms) {
       if (!messageRoomOpponents.containsKey(room.id))
         setBusyForObject(room, true);
       messageRoomUsers[room.id] =
           await getIt<UserService>().getUsersByIds(room.userIds);
-      messageRoomUnread[room.id] =
-          room.userInfos[auth.uid].lastViewedAt == null ||
-              room.lastMessagedAt
-                  .toDate()
-                  .isAfter(room.userInfos[auth.uid].lastViewedAt.toDate());
-      await setOpponent(room);
+      _setUnread(room);
+      _setOpponent(room);
       setBusyForObject(room, false);
     }
   }
 
-  Future<void> setOpponent(MessageRoomModel room) async {
+  void _setOpponent(MessageRoomModel room) {
     if (room.isGroup) {
       //group 톡 일경우
     } else {
@@ -63,4 +59,11 @@ class MessageRoomListScreenViewModel
     }
   }
 
+  void _setUnread(MessageRoomModel room) {
+    messageRoomUnread[room.id] =
+        room.userInfos[auth.uid].lastViewedAt == null ||
+            room.lastMessagedAt
+                .toDate()
+                .isAfter(room.userInfos[auth.uid].lastViewedAt.toDate());
+  }
 }
