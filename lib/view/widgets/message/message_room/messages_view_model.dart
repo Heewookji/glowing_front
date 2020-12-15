@@ -17,10 +17,11 @@ class MessagesViewModel extends StreamViewModel<MessageModel> {
   List<MessageModel> messages;
   final scrollController = ScrollController();
   bool isFetching = false;
+
   MessagesViewModel(this.roomId, List<UserModel> userModels) {
     userMap = Map();
     userModels.forEach((user) => userMap[user.id] = user);
-    scrollController.addListener(_scrollListener);
+    scrollController.addListener(_addPastMessagesByScroll);
     messages = List();
   }
 
@@ -36,18 +37,33 @@ class MessagesViewModel extends StreamViewModel<MessageModel> {
 
   @override
   MessageModel transformData(MessageModel newMessage) {
-    _buildMessages(newMessage).then((value) => setBusy(false));
+    _addNewMessage(newMessage).then((value) => setBusy(false));
     return newMessage;
   }
 
-  Future<void> _buildMessages(MessageModel newMessage) async {
-    if (messages.length == 0) {
+  Future<void> _addNewMessage(MessageModel newMessage) async {
+    messages.insert(0, newMessage);
+    if (messages.length == 1) {
       final pageMessages = await getIt<MessageService>()
           .getPageMessagesByRoomId(roomId, isFirst: true);
       messages.addAll(pageMessages);
     }
-    messages.insert(0, newMessage);
     _buildPrintList(messages);
+  }
+
+  void _addPastMessagesByScroll() async {
+    if (scrollController.position.atEdge &&
+        !isFetching &&
+        scrollController.position.pixels > 0) {
+      isFetching = true;
+      notifyListeners();
+      final pageMessages =
+          await getIt<MessageService>().getPageMessagesByRoomId(roomId);
+      messages.addAll(pageMessages);
+      _buildPrintList(messages);
+      isFetching = false;
+      notifyListeners();
+    }
   }
 
   void _buildPrintList(List<MessageModel> messages) {
@@ -62,22 +78,5 @@ class MessagesViewModel extends StreamViewModel<MessageModel> {
       }
     }
     printList = newList;
-  }
-
-  void _scrollListener() {
-    if (scrollController.position.atEdge &&
-        !isFetching &&
-        scrollController.position.pixels > 0) {
-      isFetching = true;
-      notifyListeners();
-      getIt<MessageService>().getPageMessagesByRoomId(roomId).then(
-        (pageMessages) {
-          messages.addAll(pageMessages);
-          _buildPrintList(messages);
-          isFetching = false;
-          notifyListeners();
-        },
-      );
-    }
   }
 }
