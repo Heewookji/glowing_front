@@ -23,16 +23,22 @@ class Message extends StatelessWidget {
     return Row(
       mainAxisAlignment:
           isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (!isMine) _buildAvatar(screenWidth, screenHeight),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
+        Container(
+          margin: EdgeInsets.only(
+            left: screenWidth * 0.02,
+            right: screenWidth * 0.03,
+            bottom: screenHeight * 0.01,
+          ),
           child: Column(
             crossAxisAlignment:
                 isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              if (!isMine) _buildNickName(theme.textTheme.bodyText1),
-              _buildTextAndTime(screenWidth, theme),
+              if (!isMine)
+                _buildNickName(screenHeight, theme.textTheme.bodyText2),
+              _buildTextAndTime(screenWidth, screenHeight, theme),
             ],
           ),
         ),
@@ -40,8 +46,9 @@ class Message extends StatelessWidget {
     );
   }
 
-  Container _buildNickName(TextStyle style) {
+  Container _buildNickName(double screenHeight, TextStyle style) {
     return Container(
+      margin: EdgeInsets.only(bottom: screenHeight * 0.005),
       child: Text(
         userInfo.nickName,
         style: style,
@@ -49,44 +56,39 @@ class Message extends StatelessWidget {
     );
   }
 
-  Widget _buildTextAndTime(double screenWidth, ThemeData theme) {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: 5,
-        bottom: 15,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          if (isMine)
-            _buildTimeText(message.createdAt.toDate(), theme.textTheme.caption),
-          Container(
-            decoration: BoxDecoration(
-              color: !isMine ? theme.backgroundColor : theme.accentColor,
-              borderRadius: BorderRadius.only(
-                topLeft: !isMine ? Radius.circular(0) : Radius.circular(12),
-                topRight: isMine ? Radius.circular(0) : Radius.circular(12),
-                bottomLeft: Radius.circular(12),
-                bottomRight: Radius.circular(12),
-              ),
-            ),
-            padding: EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 15,
-            ),
-            margin: EdgeInsets.only(
-                left: !isMine ? 0 : screenWidth * 0.01,
-                right: isMine ? 0 : screenWidth * 0.01),
-            width: message.text.length > 14 ? screenWidth * 0.4 : null,
-            child: Text(
-              message.text,
-              style: theme.textTheme.bodyText2,
+  Widget _buildTextAndTime(
+      double screenWidth, double screenHeight, ThemeData theme) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        if (isMine)
+          _buildTimeText(message.createdAt.toDate(), theme.textTheme.caption),
+        Container(
+          decoration: BoxDecoration(
+            color: !isMine ? theme.backgroundColor : theme.accentColor,
+            borderRadius: BorderRadius.only(
+              topLeft: !isMine ? Radius.circular(0) : Radius.circular(12),
+              topRight: isMine ? Radius.circular(0) : Radius.circular(12),
+              bottomLeft: Radius.circular(12),
+              bottomRight: Radius.circular(12),
             ),
           ),
-          if (!isMine)
-            _buildTimeText(message.createdAt.toDate(), theme.textTheme.caption),
-        ],
-      ),
+          padding: EdgeInsets.symmetric(
+            vertical: 10,
+            horizontal: 15,
+          ),
+          margin: EdgeInsets.only(
+              left: !isMine ? 0 : screenWidth * 0.01,
+              right: isMine ? 0 : screenWidth * 0.01),
+          width: message.text.length > 14 ? screenWidth * 0.4 : null,
+          child: Text(
+            message.text,
+            style: theme.textTheme.bodyText2,
+          ),
+        ),
+        if (!isMine)
+          _buildTimeText(message.createdAt.toDate(), theme.textTheme.caption),
+      ],
     );
   }
 
@@ -98,9 +100,6 @@ class Message extends StatelessWidget {
           CircleAvatar(
             backgroundImage: NetworkImage(userInfo.imageUrl),
           ),
-          SizedBox(
-            height: screenHeight * 0.04,
-          )
         ],
       ),
     );

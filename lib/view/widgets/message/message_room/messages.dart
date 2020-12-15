@@ -39,13 +39,7 @@ class Messages extends StatelessWidget {
                   return Column(
                     children: [
                       index == model.printList.length - 1
-                          ? Container(
-                              margin: EdgeInsets.symmetric(
-                                  vertical: screenSize.height * 0.04),
-                              child: model.isFetching
-                                  ? SpaceIndicator(color: theme.accentColor)
-                                  : null,
-                            )
+                          ? _buildIsFetchingIndicator(screenSize, model, theme)
                           : Container(),
                       Message(
                         message: message,
@@ -58,6 +52,14 @@ class Messages extends StatelessWidget {
                 },
               );
       },
+    );
+  }
+
+  Container _buildIsFetchingIndicator(
+      Size screenSize, MessagesViewModel model, ThemeData theme) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: screenSize.height * 0.04),
+      child: model.isFetching ? SpaceIndicator(color: theme.accentColor) : null,
     );
   }
 
