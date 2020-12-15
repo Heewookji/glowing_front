@@ -30,12 +30,18 @@ class Messages extends StatelessWidget {
                 controller: model.scrollController,
                 itemBuilder: (ctx, index) {
                   final printObject = model.printList[index];
-                  if (printObject is DateTime) {
-                    DateTime createdAt = printObject;
+                  if (printObject is DateTime)
                     return _buildDivider(
-                        createdAt, screenSize, theme.textTheme.caption);
-                  }
+                        printObject, screenSize, theme.textTheme.caption);
                   MessageModel message = printObject;
+                  bool isSameMinutes = index == 0
+                      ? false
+                      : model.isSameMinutes(
+                          message, model.printList[index - 1]);
+                  bool isMinuteFirst = index == model.printList.length - 1
+                      ? true
+                      : !model.isSameMinutes(
+                          message, model.printList[index + 1]);
                   return Column(
                     children: [
                       index == model.printList.length - 1
@@ -45,6 +51,8 @@ class Messages extends StatelessWidget {
                         message: message,
                         isMine: model.auth.uid == message.userId,
                         userInfo: model.userMap[message.userId],
+                        isSameMinutes: isSameMinutes,
+                        isMinuteFirst: isMinuteFirst,
                         key: ValueKey(message.id),
                       ),
                     ],

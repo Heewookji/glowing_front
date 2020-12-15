@@ -80,4 +80,13 @@ class MessagesViewModel extends StreamViewModel<MessageModel> {
     }
     printList = newList;
   }
+
+  bool isSameMinutes(MessageModel one, Object another) {
+    if (another is DateTime) return false;
+    MessageModel anotherMessage = another;
+    String oneHm = DateFormat.Hm().format(one.createdAt.toDate());
+    String anotherHm =
+        DateFormat.Hm().format(anotherMessage.createdAt.toDate());
+    return one.userId == anotherMessage.userId && oneHm == anotherHm;
+  }
 }

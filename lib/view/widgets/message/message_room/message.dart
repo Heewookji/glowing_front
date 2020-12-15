@@ -9,11 +9,16 @@ class Message extends StatelessWidget {
     @required this.isMine,
     @required this.userInfo,
     @required this.key,
+    @required this.isSameMinutes,
+    @required this.isMinuteFirst,
   });
+
   final Key key;
   final bool isMine;
   final UserModel userInfo;
   final MessageModel message;
+  final bool isSameMinutes;
+  final bool isMinuteFirst;
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +30,24 @@ class Message extends StatelessWidget {
           isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (!isMine) _buildAvatar(screenWidth, screenHeight),
+        Container(
+          width: screenWidth * 0.1,
+          margin: EdgeInsets.only(left: screenWidth * 0.03),
+          child: isMinuteFirst && !isMine
+              ? _buildAvatar(screenWidth, screenHeight)
+              : null,
+        ),
         Container(
           margin: EdgeInsets.only(
             left: screenWidth * 0.02,
             right: screenWidth * 0.03,
-            bottom: screenHeight * 0.01,
+            bottom: screenHeight * 0.008,
           ),
           child: Column(
             crossAxisAlignment:
                 isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              if (!isMine)
+              if (isMinuteFirst && !isMine)
                 _buildNickName(screenHeight, theme.textTheme.bodyText2),
               _buildTextAndTime(screenWidth, screenHeight, theme),
             ],
@@ -46,7 +57,7 @@ class Message extends StatelessWidget {
     );
   }
 
-  Container _buildNickName(double screenHeight, TextStyle style) {
+  Widget _buildNickName(double screenHeight, TextStyle style) {
     return Container(
       margin: EdgeInsets.only(bottom: screenHeight * 0.005),
       child: Text(
@@ -61,51 +72,56 @@ class Message extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        if (isMine)
+        if (!isSameMinutes && isMine)
           _buildTimeText(message.createdAt.toDate(), theme.textTheme.caption),
-        Container(
-          decoration: BoxDecoration(
-            color: !isMine ? theme.backgroundColor : theme.accentColor,
-            borderRadius: BorderRadius.only(
-              topLeft: !isMine ? Radius.circular(0) : Radius.circular(12),
-              topRight: isMine ? Radius.circular(0) : Radius.circular(12),
-              bottomLeft: Radius.circular(12),
-              bottomRight: Radius.circular(12),
-            ),
-          ),
-          padding: EdgeInsets.symmetric(
-            vertical: 10,
-            horizontal: 15,
-          ),
-          margin: EdgeInsets.only(
-              left: !isMine ? 0 : screenWidth * 0.01,
-              right: isMine ? 0 : screenWidth * 0.01),
-          width: message.text.length > 14 ? screenWidth * 0.4 : null,
-          child: Text(
-            message.text,
-            style: theme.textTheme.bodyText2,
-          ),
-        ),
-        if (!isMine)
+        _buildMessageBubble(theme, screenWidth),
+        if (!isSameMinutes && !isMine)
           _buildTimeText(message.createdAt.toDate(), theme.textTheme.caption),
       ],
     );
   }
 
-  Container _buildAvatar(double screenWidth, double screenHeight) {
+  Widget _buildMessageBubble(ThemeData theme, double screenWidth) {
     return Container(
-      margin: EdgeInsets.only(left: screenWidth * 0.03),
-      child: Column(
-        children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(userInfo.imageUrl),
-          ),
-        ],
+      decoration: BoxDecoration(
+        color: !isMine ? theme.backgroundColor : theme.accentColor,
+        borderRadius: BorderRadius.only(
+          topLeft: isMinuteFirst && !isMine
+              ? Radius.circular(0)
+              : Radius.circular(12),
+          topRight: isMinuteFirst && isMine
+              ? Radius.circular(0)
+              : Radius.circular(12),
+          bottomLeft: Radius.circular(12),
+          bottomRight: Radius.circular(12),
+        ),
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: 10,
+        horizontal: 15,
+      ),
+      margin: EdgeInsets.only(
+          left: !isMine ? 0 : screenWidth * 0.01,
+          right: isMine ? 0 : screenWidth * 0.01),
+      width: message.text.length > 14 ? screenWidth * 0.4 : null,
+      child: Text(
+        message.text,
+        style: theme.textTheme.bodyText2,
       ),
     );
   }
 
-  _buildTimeText(DateTime dateTime, TextStyle style) {
+  Widget _buildAvatar(double screenWidth, double screenHeight) {
+    return Column(
+      children: [
+        CircleAvatar(
+          backgroundImage: NetworkImage(userInfo.imageUrl),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTimeText(DateTime dateTime, TextStyle style) {
     return Column(
       children: [
         Text(
