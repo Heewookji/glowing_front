@@ -6,6 +6,7 @@ class MessageService extends ChangeNotifier {
   final _db = FirebaseFirestore.instance;
   final _collection = FirebaseFirestore.instance.collection('messageRooms');
   final int pageCount = 20;
+  DocumentSnapshot firstDocument;
   DocumentSnapshot lastDocumentOfPage;
 
   void addMessage(String roomId, MessageModel message) {
@@ -19,24 +20,22 @@ class MessageService extends ChangeNotifier {
     batch.commit();
   }
 
-  Stream<List<MessageModel>> getPageMessagesAsStreamByRoomId(String roomId) {
+  Stream<MessageModel> getTopOneMessageAsStreamByRoomId(String roomId) {
     return _collection
         .doc(roomId)
         .collection('messages')
         .orderBy('createdAt', descending: true)
-        .limit(pageCount)
+        .limit(1)
         .snapshots()
         .map((snapshot) {
-      final ret = snapshot.docs
-          .map((doc) => MessageModel.fromMap(doc.data(), doc.id))
-          .toList();
-      lastDocumentOfPage = snapshot.docs[snapshot.docs.length - 1];
-      return ret;
+      firstDocument = snapshot.docs[0];
+      return MessageModel.fromMap(snapshot.docs[0].data(), snapshot.docs[0].id);
     });
   }
 
-  Future<List<MessageModel>> getPageMessagesByRoomId(String roomId) async {
-    print('fetch');
+  Future<List<MessageModel>> getPageMessagesByRoomId(String roomId,
+      {bool isFirst = false}) async {
+    if (isFirst) lastDocumentOfPage = firstDocument;
     final snapshot = await _collection
         .doc(roomId)
         .collection('messages')

@@ -19,7 +19,7 @@ class Messages extends StatelessWidget {
       builder: (ctx, model, child) {
         ThemeData theme = Theme.of(context);
         Size screenSize = MediaQuery.of(context).size;
-        return !model.dataReady
+        return model.isBusy
             ? Center(
                 child: SpaceIndicator(color: Theme.of(context).accentColor),
               )
