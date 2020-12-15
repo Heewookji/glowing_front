@@ -31,8 +31,13 @@ class Messages extends StatelessWidget {
                 itemBuilder: (ctx, index) {
                   final printObject = model.printList[index];
                   if (printObject is DateTime)
-                    return _buildDivider(
-                        printObject, screenSize, theme.textTheme.caption);
+                    return Column(children: [
+                      index == model.printList.length - 1
+                          ? _buildIsFetchingIndicator(screenSize, model, theme)
+                          : Container(),
+                      _buildDivider(
+                          printObject, screenSize, theme.textTheme.caption)
+                    ]);
                   MessageModel message = printObject;
                   bool isSameMinutes = index == 0
                       ? false
@@ -42,20 +47,13 @@ class Messages extends StatelessWidget {
                       ? true
                       : !model.isSameMinutes(
                           message, model.printList[index + 1]);
-                  return Column(
-                    children: [
-                      index == model.printList.length - 1
-                          ? _buildIsFetchingIndicator(screenSize, model, theme)
-                          : Container(),
-                      Message(
-                        message: message,
-                        isMine: model.auth.uid == message.userId,
-                        userInfo: model.userMap[message.userId],
-                        isSameMinutes: isSameMinutes,
-                        isMinuteFirst: isMinuteFirst,
-                        key: ValueKey(message.id),
-                      ),
-                    ],
+                  return Message(
+                    message: message,
+                    isMine: model.auth.uid == message.userId,
+                    userInfo: model.userMap[message.userId],
+                    isSameMinutes: isSameMinutes,
+                    isMinuteFirst: isMinuteFirst,
+                    key: ValueKey(message.id),
                   );
                 },
               );
@@ -66,14 +64,14 @@ class Messages extends StatelessWidget {
   Container _buildIsFetchingIndicator(
       Size screenSize, MessagesViewModel model, ThemeData theme) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: screenSize.height * 0.04),
+      margin: EdgeInsets.only(top: screenSize.height * 0.04),
       child: model.isFetching ? SpaceIndicator(color: theme.accentColor) : null,
     );
   }
 
   Widget _buildDivider(DateTime dateTime, Size screenSize, TextStyle style) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: screenSize.height * 0.06),
+      padding: EdgeInsets.only(bottom: screenSize.height * 0.06),
       child: Column(
         children: [
           Divider(),
