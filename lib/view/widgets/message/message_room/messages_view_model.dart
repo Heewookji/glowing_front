@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glowing_front/core/models/message_model.dart';
 import 'package:glowing_front/core/models/user_model.dart';
+import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../../core/services/auth/firebase_auth_service.dart';
@@ -72,8 +73,8 @@ class MessagesViewModel extends StreamViewModel<MessageModel> {
       final message = messages[i];
       newList.add(message);
       if (i == messages.length - 1 ||
-          messages[i + 1].createdAt.toDate().day !=
-              messages[i].createdAt.toDate().day) {
+          DateFormat.yMd().format(messages[i + 1].createdAt.toDate()) !=
+              DateFormat.yMd().format(messages[i].createdAt.toDate())) {
         newList.add(messages[i].createdAt.toDate());
       }
     }
