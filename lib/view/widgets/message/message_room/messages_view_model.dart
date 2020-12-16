@@ -43,6 +43,7 @@ class MessagesViewModel extends StreamViewModel<MessageModel> {
   }
 
   Future<void> _addNewMessage(MessageModel newMessage) async {
+    if (messages.length != 0 && newMessage.id == messages[0].id) return;
     messages.insert(0, newMessage);
     if (messages.length == 1) {
       final pageMessages = await getIt<MessageService>()
@@ -73,9 +74,9 @@ class MessagesViewModel extends StreamViewModel<MessageModel> {
       final message = messages[i];
       newList.add(message);
       if (i == messages.length - 1 ||
-          DateFormat.yMd().format(messages[i + 1].createdAt.toDate()) !=
-              DateFormat.yMd().format(messages[i].createdAt.toDate())) {
-        newList.add(messages[i].createdAt.toDate());
+          DateFormat.yMd().format(messages[i + 1].createdAt) !=
+              DateFormat.yMd().format(messages[i].createdAt)) {
+        newList.add(messages[i].createdAt);
       }
     }
     printList = newList;
@@ -84,9 +85,8 @@ class MessagesViewModel extends StreamViewModel<MessageModel> {
   bool isSameMinutes(MessageModel one, Object another) {
     if (another is DateTime) return false;
     MessageModel anotherMessage = another;
-    String oneHm = DateFormat.Hm().format(one.createdAt.toDate());
-    String anotherHm =
-        DateFormat.Hm().format(anotherMessage.createdAt.toDate());
+    String oneHm = DateFormat.Hm().format(one.createdAt);
+    String anotherHm = DateFormat.Hm().format(anotherMessage.createdAt);
     return one.userId == anotherMessage.userId && oneHm == anotherHm;
   }
 }

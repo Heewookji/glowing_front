@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:glowing_front/core/models/model.dart';
 import 'package:glowing_front/core/utils/convert_helper.dart';
 
 class MessageRoomUserInfoModel implements Model {
   final String userId;
-  final Timestamp lastViewedAt;
+  final DateTime lastViewedAt;
 
   MessageRoomUserInfoModel({
     this.userId,
@@ -15,7 +14,8 @@ class MessageRoomUserInfoModel implements Model {
   factory MessageRoomUserInfoModel.fromMap(Map json, String id) {
     return MessageRoomUserInfoModel(
       userId: id ?? '',
-      lastViewedAt: json['lastViewedAt'] ?? null,
+      lastViewedAt:
+          json['lastViewedAt'] != null ? json['lastViewedAt'].toDate() : null,
     );
   }
   toJson() {
@@ -28,7 +28,7 @@ class MessageRoomUserInfoModel implements Model {
 class MessageRoomModel implements Model {
   final String id;
   final bool isGroup;
-  final Timestamp lastMessagedAt;
+  final DateTime lastMessagedAt;
   final String lastMessagedText;
   final List<String> userIds;
   final Map<String, MessageRoomUserInfoModel> userInfos;
@@ -46,8 +46,9 @@ class MessageRoomModel implements Model {
     return MessageRoomModel(
       id: id ?? '',
       isGroup: json['isGroup'] ?? false,
-      lastMessagedAt:
-          json['lastMessagedAt'] ?? Timestamp.fromDate(DateTime(1900)),
+      lastMessagedAt: json['lastMessagedAt'] != null
+          ? json['lastMessagedAt'].toDate()
+          : null,
       lastMessagedText: json['lastMessagedText'] ?? '',
       userIds: json['userIds'] == null
           ? List()

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 import 'model.dart';
@@ -8,7 +7,7 @@ class UserModel implements Model {
   final String email;
   final String nickName;
   final String imageUrl;
-  final Timestamp createdAt;
+  final DateTime createdAt;
 
   UserModel({
     this.id,
@@ -24,7 +23,7 @@ class UserModel implements Model {
       email: json['email'] ?? '',
       nickName: json['nickName'] ?? '',
       imageUrl: json['imageUrl'] ?? '',
-      createdAt: json['createdAt'] ?? Timestamp.fromDate(DateTime(9999)),
+      createdAt: json['createdAt'] != null ? json['createdAt'].toDate() : null,
     );
   }
 

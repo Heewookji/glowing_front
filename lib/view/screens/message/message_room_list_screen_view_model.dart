@@ -62,8 +62,6 @@ class MessageRoomListScreenViewModel
   void _setUnread(MessageRoomModel room) {
     messageRoomUnread[room.id] =
         room.userInfos[auth.uid].lastViewedAt == null ||
-            room.lastMessagedAt
-                .toDate()
-                .isAfter(room.userInfos[auth.uid].lastViewedAt.toDate());
+            room.lastMessagedAt.isAfter(room.userInfos[auth.uid].lastViewedAt);
   }
 }

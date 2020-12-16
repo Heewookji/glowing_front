@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:glowing_front/core/models/message_model.dart';
@@ -40,7 +39,7 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
       roomId,
       MessageRoomUserInfoModel(
         userId: auth.uid,
-        lastViewedAt: Timestamp.now(),
+        lastViewedAt: DateTime.now(),
       ),
     );
     super.dispose();
@@ -65,11 +64,11 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
   void sendMessage() async {
     final text = textSendBarController.text;
     if (text.trim().isEmpty) return;
-    final currentTime = Timestamp.now();
+    final currentTime = DateTime.now();
 
     if (notExistRoom) {
       final userInfos = {
-        auth.uid: MessageRoomUserInfoModel(lastViewedAt: Timestamp.now()),
+        auth.uid: MessageRoomUserInfoModel(lastViewedAt: DateTime.now()),
         opponentId: MessageRoomUserInfoModel(lastViewedAt: null),
       };
       roomId = await getIt<MessageRoomService>().addMessageRoom(

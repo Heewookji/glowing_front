@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:glowing_front/core/models/model.dart';
 
@@ -6,7 +5,7 @@ class MessageModel implements Model {
   final String id;
   final String text;
   final String userId;
-  final Timestamp createdAt;
+  final DateTime createdAt;
 
   MessageModel({
     this.id,
@@ -19,7 +18,8 @@ class MessageModel implements Model {
       : id = id ?? '',
         text = json['text'] ?? '',
         userId = json['userId'],
-        createdAt = json['createdAt'] ?? Timestamp.fromDate(DateTime(9999));
+        createdAt =
+            json['createdAt'] != null ? json['createdAt'].toDate() : null;
 
   toJson() {
     return {

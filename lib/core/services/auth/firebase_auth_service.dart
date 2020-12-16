@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:glowing_front/core/models/user_model.dart';
 import 'package:glowing_front/core/services/firestore/user_service.dart';
@@ -38,7 +37,7 @@ class FirebaseAuthService {
           nickName: nickName,
           imageUrl:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThLP6xJXBY_W2tT5waakogfnpHk4uhpVTy7A&usqp=CAU',
-          createdAt: Timestamp.now(),
+          createdAt: DateTime.now(),
         ),
       );
     } catch (e) {

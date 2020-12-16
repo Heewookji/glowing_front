@@ -73,10 +73,10 @@ class Message extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         if (!isSameMinutes && isMine)
-          _buildTimeText(message.createdAt.toDate(), theme.textTheme.caption),
+          _buildTimeText(message.createdAt, theme.textTheme.caption),
         _buildMessageBubble(theme, screenWidth),
         if (!isSameMinutes && !isMine)
-          _buildTimeText(message.createdAt.toDate(), theme.textTheme.caption),
+          _buildTimeText(message.createdAt, theme.textTheme.caption),
       ],
     );
   }

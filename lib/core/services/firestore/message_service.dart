@@ -9,17 +9,6 @@ class MessageService extends ChangeNotifier {
   DocumentSnapshot firstDocument;
   DocumentSnapshot lastDocumentOfPage;
 
-  void addMessage(String roomId, MessageModel message) {
-    WriteBatch batch = _db.batch();
-    batch.set(
-        _collection.doc(roomId).collection('messages').doc(), message.toJson());
-    batch.update(_collection.doc(roomId), {
-      'lastMessagedAt': message.createdAt,
-      'lastMessagedText': message.text,
-    });
-    batch.commit();
-  }
-
   Stream<MessageModel> getTopOneMessageAsStreamByRoomId(String roomId) {
     return _collection
         .doc(roomId)
@@ -49,5 +38,16 @@ class MessageService extends ChangeNotifier {
         .toList();
     lastDocumentOfPage = snapshot.docs.last;
     return ret;
+  }
+
+  void addMessage(String roomId, MessageModel message) {
+    WriteBatch batch = _db.batch();
+    batch.set(
+        _collection.doc(roomId).collection('messages').doc(), message.toJson());
+    batch.update(_collection.doc(roomId), {
+      'lastMessagedAt': message.createdAt,
+      'lastMessagedText': message.text,
+    });
+    batch.commit();
   }
 }

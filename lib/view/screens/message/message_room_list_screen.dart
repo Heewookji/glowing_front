@@ -129,7 +129,7 @@ class MessageRoomListScreen extends StatelessWidget {
       bool isUnread, ThemeData theme) {
     return Column(
       children: [
-        Text(DateFormat.Hm().format(messageRoom.lastMessagedAt.toDate())),
+        Text(DateFormat.Hm().format(messageRoom.lastMessagedAt)),
         SizedBox(
           height: screenSize.height * 0.03,
           child: isUnread
