@@ -41,7 +41,7 @@ class Message extends StatelessWidget {
           margin: EdgeInsets.only(
             left: screenWidth * 0.02,
             right: screenWidth * 0.03,
-            bottom: screenHeight * 0.008,
+            bottom: screenHeight * 0.006,
           ),
           child: Column(
             crossAxisAlignment:
@@ -97,12 +97,13 @@ class Message extends StatelessWidget {
         ),
       ),
       padding: EdgeInsets.symmetric(
-        vertical: 8,
+        vertical: 7,
         horizontal: 10,
       ),
       margin: EdgeInsets.only(
-          left: !isMine ? 0 : screenWidth * 0.01,
-          right: isMine ? 0 : screenWidth * 0.01),
+        left: !isMine ? 0 : screenWidth * 0.01,
+        right: isMine ? 0 : screenWidth * 0.01,
+      ),
       width: message.text.length > 14 ? screenWidth * 0.4 : null,
       child: Text(
         message.text,

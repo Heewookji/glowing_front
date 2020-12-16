@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glowing_front/view/widgets/common/indicator/space_indicator.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../widgets/message/message_room/message_send_bar.dart';
@@ -14,6 +15,7 @@ class MessageRoomScreen extends StatelessWidget {
       viewModelBuilder: () =>
           MessageRoomScreenViewModel(ModalRoute.of(context).settings.arguments),
       builder: (ctx, model, child) {
+        ThemeData theme = Theme.of(context);
         return Scaffold(
           appBar: AppBar(
             title: Text(
@@ -25,7 +27,7 @@ class MessageRoomScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: model.isBusy
-                      ? Container()
+                      ? Center(child: SpaceIndicator(color: theme.accentColor))
                       : GestureDetector(
                           onTap: () => model.notifyListeners(),
                           //FocusScope.of(context).unfocus(),

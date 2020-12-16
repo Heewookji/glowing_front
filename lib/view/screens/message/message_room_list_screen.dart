@@ -119,6 +119,7 @@ class MessageRoomListScreen extends StatelessWidget {
           child: Text(
             messageRoom.lastMessagedText,
             overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.bodyText2,
           ),
         ),
       ],
@@ -129,12 +130,15 @@ class MessageRoomListScreen extends StatelessWidget {
       bool isUnread, ThemeData theme) {
     return Column(
       children: [
-        Text(DateFormat.Hm().format(messageRoom.lastMessagedAt)),
         SizedBox(
           height: screenSize.height * 0.03,
           child: isUnread
               ? Icon(Icons.circle, color: theme.accentColor, size: 10)
               : null,
+        ),
+        Text(
+          DateFormat.Hm().format(messageRoom.lastMessagedAt),
+          style: theme.textTheme.caption,
         ),
       ],
     );
