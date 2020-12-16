@@ -71,7 +71,8 @@ class Messages extends StatelessWidget {
 
   Widget _buildDivider(DateTime dateTime, Size screenSize, TextStyle style) {
     return Padding(
-      padding: EdgeInsets.only(bottom: screenSize.height * 0.06),
+      padding: EdgeInsets.only(
+          bottom: screenSize.height * 0.04, top: screenSize.height * 0.04),
       child: Column(
         children: [
           Divider(),

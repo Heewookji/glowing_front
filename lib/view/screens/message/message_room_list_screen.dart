@@ -73,10 +73,8 @@ class MessageRoomListScreen extends StatelessWidget {
                         messageRoom.id,
                         opponent.nickName,
                       ),
-                      child: Card(
-                        child: _buildRow(
-                            messageRoom, opponent, isUnread, screenSize, theme),
-                      ),
+                      child: _buildRow(
+                          messageRoom, opponent, isUnread, screenSize, theme),
                     );
                   },
                 ),
@@ -87,42 +85,58 @@ class MessageRoomListScreen extends StatelessWidget {
 
   Widget _buildRow(MessageRoomModel messageRoom, UserModel opponent,
       bool isUnread, Size screenSize, ThemeData theme) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: screenSize.height * 0.01),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(opponent.imageUrl),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                opponent.nickName,
-                style: theme.textTheme.bodyText1,
-              ),
-              Container(
-                padding: EdgeInsets.only(top: screenSize.height * 0.005),
-                width: screenSize.width * 0.55,
-                child: Text(
-                  messageRoom.lastMessagedText,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          Column(children: [
-            Text(DateFormat.Hm().format(messageRoom.lastMessagedAt.toDate())),
-            SizedBox(
-              height: screenSize.height * 0.03,
-              child: isUnread
-                  ? Icon(Icons.circle, color: theme.accentColor, size: 10)
-                  : null,
+    return Card(
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: screenSize.height * 0.01),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            CircleAvatar(
+              maxRadius: screenSize.height * 0.03,
+              backgroundImage: NetworkImage(opponent.imageUrl),
+              backgroundColor: Colors.transparent,
             ),
-          ]),
-        ],
+            _buildNickNameAndText(opponent, theme, screenSize, messageRoom),
+            _buildTimeAndBadge(messageRoom, screenSize, isUnread, theme),
+          ],
+        ),
       ),
+    );
+  }
+
+  Column _buildNickNameAndText(UserModel opponent, ThemeData theme,
+      Size screenSize, MessageRoomModel messageRoom) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          opponent.nickName,
+          style: theme.textTheme.bodyText1,
+        ),
+        Container(
+          padding: EdgeInsets.only(top: screenSize.height * 0.005),
+          width: screenSize.width * 0.55,
+          child: Text(
+            messageRoom.lastMessagedText,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column _buildTimeAndBadge(MessageRoomModel messageRoom, Size screenSize,
+      bool isUnread, ThemeData theme) {
+    return Column(
+      children: [
+        Text(DateFormat.Hm().format(messageRoom.lastMessagedAt.toDate())),
+        SizedBox(
+          height: screenSize.height * 0.03,
+          child: isUnread
+              ? Icon(Icons.circle, color: theme.accentColor, size: 10)
+              : null,
+        ),
+      ],
     );
   }
 }

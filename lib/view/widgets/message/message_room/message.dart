@@ -97,8 +97,8 @@ class Message extends StatelessWidget {
         ),
       ),
       padding: EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 15,
+        vertical: 8,
+        horizontal: 10,
       ),
       margin: EdgeInsets.only(
           left: !isMine ? 0 : screenWidth * 0.01,
@@ -116,6 +116,7 @@ class Message extends StatelessWidget {
       children: [
         CircleAvatar(
           backgroundImage: NetworkImage(userInfo.imageUrl),
+          backgroundColor: Colors.transparent,
         ),
       ],
     );
