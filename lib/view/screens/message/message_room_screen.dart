@@ -31,7 +31,9 @@ class MessageRoomScreen extends StatelessWidget {
                       : GestureDetector(
                           onTap: () => model.notifyListeners(),
                           //FocusScope.of(context).unfocus(),
-                          child: Messages(model.roomId, model.users),
+                          child: model.notExistRoom
+                              ? Container()
+                              : Messages(model.roomId, model.users),
                         ),
                 ),
                 MessageSendBar(),

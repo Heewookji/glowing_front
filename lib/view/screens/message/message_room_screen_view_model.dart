@@ -29,7 +29,7 @@ class MessageRoomScreenViewModel extends StreamViewModel<MessageRoomModel> {
 
   void initialise() {
     //초기 로딩
-    setBusy(true);
+    if (!notExistRoom) setBusy(true);
     super.initialise();
   }
 

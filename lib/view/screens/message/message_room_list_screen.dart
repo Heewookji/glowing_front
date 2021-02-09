@@ -49,10 +49,6 @@ class MessageRoomListScreen extends StatelessWidget {
               ),
             ],
           ),
-          floatingActionButton: IconButton(
-            icon: Icon(Icons.play_arrow),
-            onPressed: () {},
-          ),
           body: model.isBusy
               ? Center(
                   child: SpaceIndicator(
